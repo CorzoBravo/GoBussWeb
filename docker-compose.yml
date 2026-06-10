@@ -24,9 +24,7 @@ services:
     build:
       context: ./gobuss-back
     container_name: gobuss_backend
-    # ports:
-    #   - "8080:8080"
-    expose:
+    ports:
       - "8080"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
@@ -41,9 +39,7 @@ services:
     build:
       context: ./gobuss-front
     container_name: gobuss_frontend
-    # ports:
-    #   - "3000:80"
-    expose:
+    ports:
       - "80"
     depends_on:
       - backend
