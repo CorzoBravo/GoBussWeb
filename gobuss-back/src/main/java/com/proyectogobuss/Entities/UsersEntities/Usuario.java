@@ -19,9 +19,8 @@ public class Usuario {
     @Column(nullable = false, length = 100)
     private String correo;
 
-    @Column(nullable = false, length = 255)
-    private String clave;
-
+    @Column(nullable = false)
+    private boolean activo = true;
 
     public String getCedula() {
         return cedula;
@@ -55,11 +54,11 @@ public class Usuario {
         this.correo = correo;
     }
 
-    public String getClave() {
-        return clave;
+    public boolean isActivo() {
+        return activo;
     }
 
-    public void setClave(String clave) {
-        this.clave = clave;
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }

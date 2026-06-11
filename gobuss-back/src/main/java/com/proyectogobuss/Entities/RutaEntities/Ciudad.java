@@ -40,4 +40,7 @@ public class Ciudad {
     public String toString() {
         return nombre; 
     }
+
+    @Column(nullable = false)
+    private boolean activo = true;
 }

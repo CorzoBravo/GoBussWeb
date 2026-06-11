@@ -3,10 +3,12 @@ package com.proyectogobuss.services;
 import com.proyectogobuss.Entities.Boleto;
 import com.proyectogobuss.repositories.BoletoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BoletoService {
@@ -28,7 +30,7 @@ public class BoletoService {
             emailService.enviarBoleto(boletoDB, pdf);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error procesando boleto id={}", boleto.getIdBoleto(), e);
             throw new RuntimeException(
                     "No se pudo procesar y enviar el boleto", e);
         }

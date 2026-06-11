@@ -41,21 +41,21 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + expirationTime);
 
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .claims(claims)
+                .subject(subject)
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(getSigningKey(), Jwts.SIG.HS512)
                 .compact();
     }
 
     public String getUserIdFromToken(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody()
+                    .parseSignedClaims(token)
+                    .getPayload()
                     .getSubject();
         } catch (JwtException | IllegalArgumentException e) {
             log.error("Error extracting user ID from token", e);
@@ -65,11 +65,11 @@ public class JwtTokenProvider {
 
     public String getUserTypeFromToken(String token) {
         try {
-            return (String) Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
+            return (String) Jwts.parser()
+                    .verifyWith(getSigningKey())
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody()
+                    .parseSignedClaims(token)
+                    .getPayload()
                     .get("userType");
         } catch (JwtException | IllegalArgumentException e) {
             log.error("Error extracting user type from token", e);
@@ -79,11 +79,11 @@ public class JwtTokenProvider {
 
     public String getRoleFromToken(String token) {
         try {
-            return (String) Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
+            return (String) Jwts.parser()
+                    .verifyWith(getSigningKey())
                     .build()
-                    .parseClaimsJws(token)
-                    .getBody()
+                    .parseSignedClaims(token)
+                    .getPayload()
                     .get("role");
         } catch (JwtException | IllegalArgumentException e) {
             log.error("Error extracting role from token", e);
@@ -93,15 +93,13 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
+            Jwts.parser()
+                    .verifyWith(getSigningKey())
                     .build()
-                    .parseClaimsJws(token);
+                    .parseSignedClaims(token);
             return true;
-        } catch (SecurityException e) {
-            log.error("Invalid JWT signature", e);
-        } catch (MalformedJwtException e) {
-            log.error("Invalid JWT token", e);
+        } catch (SecurityException | MalformedJwtException e) {
+            log.error("Invalid JWT signature/token", e);
         } catch (ExpiredJwtException e) {
             log.error("JWT token is expired", e);
         } catch (UnsupportedJwtException e) {
@@ -114,10 +112,10 @@ public class JwtTokenProvider {
 
     public boolean isTokenExpired(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(getSigningKey())
+            Jwts.parser()
+                    .verifyWith(getSigningKey())
                     .build()
-                    .parseClaimsJws(token);
+                    .parseSignedClaims(token);
             return false;
         } catch (ExpiredJwtException e) {
             return true;

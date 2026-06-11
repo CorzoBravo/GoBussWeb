@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/ayudantes")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"})
 public class AyudanteController {
 
     private final AyudanteService ayudanteService;

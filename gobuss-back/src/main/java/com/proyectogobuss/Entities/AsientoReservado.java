@@ -74,4 +74,7 @@ public class AsientoReservado {
         this.estado = estado;
     }
 
+
+    @Column(nullable = false)
+    private boolean activo = true;
 }

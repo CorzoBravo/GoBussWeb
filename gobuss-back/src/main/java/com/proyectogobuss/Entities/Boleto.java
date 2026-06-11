@@ -100,4 +100,7 @@ public class Boleto {
     public void setAsientos(List<AsientoReservado> asientos) {
         this.asientos = asientos;
     }
+
+    @Column(nullable = false)
+    private boolean activo = true;
 }

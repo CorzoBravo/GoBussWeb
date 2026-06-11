@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/cooperativas/{ruc}/conductores")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"})
 public class ConductorController {
 
     private final ConductorService conductorService;

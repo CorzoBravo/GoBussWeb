@@ -70,10 +70,13 @@ public class RutaFinal {
                 rutaGeneral.getDestino() != null) {
 
             return rutaGeneral.getOrigen().getNombre()
-                    + " → " +
+                    + " â†’ " +
                     rutaGeneral.getDestino().getNombre();
         }
         return "Ruta Final " + idRutaFinal;
     }
 
+
+    @Column(nullable = false)
+    private boolean activo = true;
 }

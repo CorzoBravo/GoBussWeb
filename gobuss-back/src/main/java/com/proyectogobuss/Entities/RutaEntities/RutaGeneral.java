@@ -50,4 +50,7 @@ public class RutaGeneral {
     public void setDestino(Ciudad destino) {
         this.destino = destino;
     }
+
+    @Column(nullable = false)
+    private boolean activo = true;
 }

@@ -7,8 +7,7 @@ import com.proyectogobuss.dto.ReporteVentasFechaDTO;
 import com.proyectogobuss.dto.ReporteVentasRutaDTO;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -18,10 +17,10 @@ public class ReportePDFService {
 
         public void generarReporteVentasRuta(
                         List<ReporteVentasRutaDTO> datos,
-                        File destino) throws Exception {
+                        OutputStream destino) throws Exception {
 
                 Document doc = new Document(PageSize.A4);
-                PdfWriter.getInstance(doc, new FileOutputStream(destino));
+                PdfWriter.getInstance(doc, destino);
                 doc.open();
 
                 Font titulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
@@ -58,11 +57,11 @@ public class ReportePDFService {
 
         public void generarVentasPorFecha(
                         List<ReporteVentasFechaDTO> datos,
-                        File destino,
+                        OutputStream destino,
                         String rucCooperativa) throws Exception {
 
                 Document doc = new Document(PageSize.A4);
-                PdfWriter.getInstance(doc, new FileOutputStream(destino));
+                PdfWriter.getInstance(doc, destino);
                 doc.open();
 
                 Font titulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
@@ -109,11 +108,11 @@ public class ReportePDFService {
 
         public void generarReporteOcupacionHorario(
                         List<ReporteOcupacionHorarioDTO> datos,
-                        File destino,
+                        OutputStream destino,
                         String rucCooperativa) throws Exception {
 
                 Document doc = new Document(PageSize.A4.rotate());
-                PdfWriter.getInstance(doc, new FileOutputStream(destino));
+                PdfWriter.getInstance(doc, destino);
                 doc.open();
 
                 Font titulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);

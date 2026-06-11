@@ -83,4 +83,7 @@ public class Conductor {
     public String toString() {
         return nombre + " (" + cedula + ")";
     }
+
+    @Column(nullable = false)
+    private boolean activo = true;
 }

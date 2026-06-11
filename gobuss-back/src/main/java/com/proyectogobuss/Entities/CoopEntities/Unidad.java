@@ -88,7 +88,10 @@ public class Unidad {
 
     @Override
     public String toString() {
-        return "Unidad " + numero + " • Placa: " + placa;
+        return "Unidad " + numero + " â€¢ Placa: " + placa;
     }
 
+
+    @Column(nullable = false)
+    private boolean activo = true;
 }

@@ -13,15 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.nio.file.Files;
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/cooperativas/{ruc}/reportes")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:5173"})
 public class ReporteController {
 
     private final ReporteService reporteService;
@@ -56,11 +54,10 @@ public class ReporteController {
     public ResponseEntity<byte[]> ventasPorRutaPdf(@PathVariable String ruc) {
         try {
             List<ReporteVentasRutaDTO> datos = reporteService.ventasPorRuta(ruc);
-            File tempFile = File.createTempFile("reporte_ventas_ruta", ".pdf");
-            reportePDFService.generarReporteVentasRuta(datos, tempFile);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            reportePDFService.generarReporteVentasRuta(datos, out);
             
-            byte[] contents = Files.readAllBytes(tempFile.toPath());
-            tempFile.delete();
+            byte[] contents = out.toByteArray();
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);

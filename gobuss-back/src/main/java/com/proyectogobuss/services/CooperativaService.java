@@ -1,11 +1,14 @@
 package com.proyectogobuss.services;
 
 import com.proyectogobuss.Entities.UsersEntities.Cooperativa;
+import com.proyectogobuss.Entities.UsersEntities.Role;
+import com.proyectogobuss.Entities.UsersEntities.User;
 import com.proyectogobuss.dto.cooperativa.CooperativaCreateRequest;
 import com.proyectogobuss.dto.cooperativa.CooperativaDTO;
 import com.proyectogobuss.dto.cooperativa.CooperativaUpdateRequest;
 import com.proyectogobuss.exception.ResourceNotFoundException;
 import com.proyectogobuss.repositories.CooperativaRepository;
+import com.proyectogobuss.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,12 +24,14 @@ import java.util.List;
 public class CooperativaService {
 
     private final CooperativaRepository cooperativaRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public List<CooperativaDTO> getAll() {
         return cooperativaRepository.findAll()
                 .stream()
+                .filter(Cooperativa::isActivo)
                 .map(this::convertToDTO)
                 .toList();
     }
@@ -34,7 +39,8 @@ public class CooperativaService {
     @Transactional(readOnly = true)
     public CooperativaDTO getById(String ruc) {
         Cooperativa cooperativa = cooperativaRepository.findByRuc(ruc)
-                .orElseThrow(() -> new ResourceNotFoundException("Cooperativa not found with RUC: " + ruc));
+                .filter(Cooperativa::isActivo)
+                .orElseThrow(() -> new ResourceNotFoundException("Cooperativa not found or inactive with RUC: " + ruc));
         return convertToDTO(cooperativa);
     }
 
@@ -42,6 +48,7 @@ public class CooperativaService {
     public List<CooperativaDTO> search(String searchTerm) {
         return cooperativaRepository.searchByNombreOrRuc(searchTerm)
                 .stream()
+                .filter(Cooperativa::isActivo)
                 .map(this::convertToDTO)
                 .toList();
     }
@@ -51,13 +58,22 @@ public class CooperativaService {
             throw new ResourceNotFoundException("Cooperativa already exists with RUC: " + request.getRuc());
         }
 
+        // Create Auth User
+        User user = new User();
+        user.setUsername(request.getRuc());
+        user.setPassword(passwordEncoder.encode(request.getClave()));
+        user.setRole(Role.COOPERATIVA);
+        user.setActivo(true);
+        userRepository.save(user);
+
+        // Create Profile
         Cooperativa cooperativa = new Cooperativa();
         cooperativa.setRuc(request.getRuc());
         cooperativa.setNombre(request.getNombre());
         cooperativa.setDireccion(request.getDireccion());
         cooperativa.setCorreo(request.getCorreo());
         cooperativa.setTelefono(request.getTelefono());
-        cooperativa.setClave(passwordEncoder.encode(request.getClave()));
+        cooperativa.setActivo(true);
 
         cooperativa = cooperativaRepository.save(cooperativa);
         log.info("Cooperativa created: {}", cooperativa.getRuc());
@@ -82,7 +98,9 @@ public class CooperativaService {
             cooperativa.setTelefono(request.getTelefono());
         }
         if (request.getClave() != null) {
-            cooperativa.setClave(passwordEncoder.encode(request.getClave()));
+            User user = userRepository.findByUsername(ruc).orElseThrow();
+            user.setPassword(passwordEncoder.encode(request.getClave()));
+            userRepository.save(user);
         }
 
         cooperativa = cooperativaRepository.save(cooperativa);
@@ -95,8 +113,15 @@ public class CooperativaService {
         Cooperativa cooperativa = cooperativaRepository.findByRuc(ruc)
                 .orElseThrow(() -> new ResourceNotFoundException("Cooperativa not found with RUC: " + ruc));
 
-        cooperativaRepository.delete(cooperativa);
-        log.info("Cooperativa deleted: {}", ruc);
+        cooperativa.setActivo(false);
+        cooperativaRepository.save(cooperativa);
+
+        userRepository.findByUsername(ruc).ifPresent(user -> {
+            user.setActivo(false);
+            userRepository.save(user);
+        });
+
+        log.info("Cooperativa logically deleted: {}", ruc);
     }
 
     private CooperativaDTO convertToDTO(Cooperativa cooperativa) {

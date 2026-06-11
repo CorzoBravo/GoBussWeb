@@ -51,4 +51,7 @@ public class Ayudante {
     public void setConductorAsignado(Conductor conductorAsignado) {
         this.conductorAsignado = conductorAsignado;
     }
+
+    @Column(nullable = false)
+    private boolean activo = true;
 }

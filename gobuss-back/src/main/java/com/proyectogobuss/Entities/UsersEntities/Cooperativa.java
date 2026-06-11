@@ -22,9 +22,8 @@ public class Cooperativa {
     @Column(length = 20)
     private String telefono;
 
-    @Column(nullable = false, length = 255)
-    private String clave;
-
+    @Column(nullable = false)
+    private boolean activo = true;
 
     public String getRuc() {
         return ruc;
@@ -66,11 +65,11 @@ public class Cooperativa {
         this.telefono = telefono;
     }
 
-    public String getClave() {
-        return clave;
+    public boolean isActivo() {
+        return activo;
     }
 
-    public void setClave(String clave) {
-        this.clave = clave;
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 }
