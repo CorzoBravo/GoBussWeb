@@ -43,6 +43,7 @@ com\proyectogobuss\Entities\CoopEntities\Conductor.class
 com\proyectogobuss\dto\conductor\ConductorDTO$ConductorDTOBuilder.class
 com\proyectogobuss\security\JwtTokenProvider.class
 com\proyectogobuss\JPAController\CoopJPASControllers\ConductorJPAController.class
+com\proyectogobuss\services\StorageService.class
 com\proyectogobuss\dto\ruta\RutaFinalCreateRequest.class
 Utils\QRUtils.class
 com\proyectogobuss\dto\ruta\RutaFinalDTO$RutaFinalDTOBuilder.class
