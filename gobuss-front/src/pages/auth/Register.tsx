@@ -137,7 +137,7 @@ export const Register = () => {
                 type="submit"
                 variant="primary"
                 className="w-full text-base py-3.5"
-                isLoading={loading}
+                loading={loading}
               >
                 Crear Cuenta <ArrowRight className="w-4 h-4 ml-2" />
               </Button>

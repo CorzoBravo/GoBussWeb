@@ -143,14 +143,14 @@ export const CooperativasList = () => {
               {loading ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-10">
-                    <Loading mode="bus" message="Cargando cooperativas..." />
+                    <Loading type="bus" text="Cargando cooperativas..." />
                   </td>
                 </tr>
               ) : cooperativas.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-10">
                     <EmptyState 
-                      icon={Bus}
+                      icon={<Bus />}
                       title="No se encontraron cooperativas"
                       description={search ? "Intenta con otro término de búsqueda." : "Aún no hay cooperativas registradas en el sistema."}
                       actionLabel={!search ? "Crear la primera cooperativa" : undefined}

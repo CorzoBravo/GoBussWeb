@@ -121,7 +121,7 @@ export const Dashboard = () => {
                 <Tooltip 
                   contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                   itemStyle={{ color: '#0f172a', fontWeight: 'bold' }}
-                  formatter={(value: number) => [`$${value}`, 'Ingresos']}
+                  formatter={(value: any) => [`$${value}`, 'Ingresos']}
                 />
                 <Area type="monotone" dataKey="ingresos" stroke="#f59e0b" strokeWidth={3} fillOpacity={1} fill="url(#colorIngresos)" />
               </AreaChart>

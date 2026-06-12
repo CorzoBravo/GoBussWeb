@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Bus, Map, Clock, ShieldCheck, ArrowRight, Ticket, Search, MapPin, CalendarDays } from 'lucide-react';
+import { Bus, Map, Clock, ShieldCheck, Search, MapPin, CalendarDays } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
 export const Landing = () => {

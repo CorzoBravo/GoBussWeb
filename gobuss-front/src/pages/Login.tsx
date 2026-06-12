@@ -97,7 +97,7 @@ export const Login: React.FC = () => {
                 type="submit"
                 variant="primary"
                 className="w-full text-base py-3.5"
-                isLoading={loading}
+                loading={loading}
               >
                 Iniciar Sesión
               </Button>

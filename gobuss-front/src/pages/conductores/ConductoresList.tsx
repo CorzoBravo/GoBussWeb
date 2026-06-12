@@ -191,7 +191,7 @@ export const ConductoresList = () => {
       {/* Table */}
       {!selectedRuc ? (
         <EmptyState 
-          icon={AlertCircle}
+          icon={<AlertCircle />}
           title="Seleccione una cooperativa"
           description="Para ver y gestionar sus conductores, primero debe seleccionar una cooperativa."
         />
@@ -212,14 +212,14 @@ export const ConductoresList = () => {
                 {loading ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-10">
-                      <Loading mode="bus" message="Cargando conductores..." />
+                      <Loading type="bus" text="Cargando conductores..." />
                     </td>
                   </tr>
                 ) : filteredConductores.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-6 py-10">
                       <EmptyState 
-                        icon={UserPlus}
+                        icon={<UserPlus />}
                         title="No se encontraron conductores"
                         description={search ? "Intenta con otro término de búsqueda." : "Aún no hay conductores registrados para esta cooperativa."}
                         actionLabel={!search ? "Registrar primer conductor" : undefined}
