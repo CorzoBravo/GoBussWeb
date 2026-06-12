@@ -4,17 +4,22 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { Bus, KeyRound, User as UserIcon } from 'lucide-react';
 import { toast } from 'sonner';
+import { Button } from '../components/ui/Button';
+import { Input } from '../components/ui/Input';
+import { Card } from '../components/ui/Card';
 
 export const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await api.post('/auth/login', { id: username, password });
       const data = response.data;
       
@@ -30,74 +35,75 @@ export const Login: React.FC = () => {
     } catch (err: any) {
       setError('Credenciales inválidas o cuenta inactiva');
       toast.error('Error al iniciar sesión');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white/80 backdrop-blur-xl p-10 rounded-2xl shadow-xl border border-white/50">
-        <div className="text-center">
-          <div className="bg-blue-600/10 w-20 h-20 rounded-2xl mx-auto flex items-center justify-center mb-6">
-            <Bus className="h-10 w-10 text-blue-600" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 to-surface-200 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden animate-fade-in">
+      {/* Decorative blobs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-200/40 blur-[120px]" />
+        <div className="absolute top-[60%] -right-[10%] w-[40%] h-[40%] rounded-full bg-accent-200/40 blur-[100px]" />
+      </div>
+
+      <div className="max-w-md w-full relative z-10">
+        <Card className="p-10 shadow-2xl border border-white/60 bg-white/80 backdrop-blur-xl">
+          <div className="text-center">
+            <div className="bg-brand-50 w-20 h-20 rounded-2xl mx-auto flex items-center justify-center mb-6 shadow-sm border border-brand-100">
+              <Bus className="h-10 w-10 text-brand-600" />
+            </div>
+            <h2 className="mt-2 text-3xl font-black text-surface-900 tracking-tight font-display">
+              Ingreso al Sistema
+            </h2>
+            <p className="mt-2 text-sm text-surface-500 font-medium">
+              Plataforma Administrativa <span className="font-bold text-brand-600">GoBuss</span>
+            </p>
           </div>
-          <h2 className="mt-2 text-3xl font-extrabold text-slate-900 tracking-tight">
-            Ingreso al Sistema
-          </h2>
-          <p className="mt-2 text-sm text-slate-500 font-medium">
-            Plataforma Administrativa GoBuss
-          </p>
-        </div>
-        <form className="mt-10 space-y-6" onSubmit={handleLogin}>
-          <div className="space-y-5">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Usuario / RUC / Cédula</label>
-              <div className="relative rounded-xl shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                  <UserIcon className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  type="text"
-                  required
-                  className="block w-full pl-11 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm bg-slate-50/50"
+          <form className="mt-10 space-y-6" onSubmit={handleLogin}>
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-bold text-surface-700 mb-2">Usuario / RUC / Cédula</label>
+                <Input
+                  icon={<UserIcon className="w-5 h-5 text-surface-400" />}
                   placeholder="Tu usuario"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  required
                 />
               </div>
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Contraseña</label>
-              <div className="relative rounded-xl shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                  <KeyRound className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
+              <div>
+                <label className="block text-sm font-bold text-surface-700 mb-2">Contraseña</label>
+                <Input
                   type="password"
-                  required
-                  className="block w-full pl-11 pr-3 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all sm:text-sm bg-slate-50/50"
+                  icon={<KeyRound className="w-5 h-5 text-surface-400" />}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
             </div>
-          </div>
 
-          {error && (
-            <div className="text-red-600 text-sm text-center font-medium bg-red-50 py-3 rounded-xl border border-red-100 animate-in fade-in slide-in-from-top-2">
-              {error}
+            {error && (
+              <div className="text-danger-600 text-sm text-center font-bold bg-danger-50 py-3 rounded-xl border border-danger-100 animate-slide-up">
+                {error}
+              </div>
+            )}
+
+            <div className="pt-4">
+              <Button
+                type="submit"
+                variant="primary"
+                className="w-full text-base py-3.5"
+                isLoading={loading}
+              >
+                Iniciar Sesión
+              </Button>
             </div>
-          )}
-
-          <div className="pt-2">
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all shadow-md hover:shadow-lg active:scale-[0.98]"
-            >
-              Iniciar Sesión
-            </button>
-          </div>
-        </form>
+          </form>
+        </Card>
       </div>
     </div>
   );

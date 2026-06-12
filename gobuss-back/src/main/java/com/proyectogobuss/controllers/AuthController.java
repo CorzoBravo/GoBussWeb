@@ -27,17 +27,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
-        // We reuse LoginRequest structure internally in authService, but pass details explicitly
-        LoginRequest loginReq = new LoginRequest();
-        loginReq.setId(request.getCedula());
-        loginReq.setPassword(request.getPassword());
-        
-        LoginResponse response = authService.registerUsuario(
-            loginReq, 
-            request.getCedula(), 
-            request.getNombres(), 
-            request.getEmail()
-        );
+        LoginResponse response = authService.registerUsuario(request);
         return ResponseEntity.ok(response);
     }
 

@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,29 +31,22 @@ public class CooperativaService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public List<CooperativaDTO> getAll() {
-        return cooperativaRepository.findAll()
-                .stream()
-                .filter(Cooperativa::isActivo)
-                .map(this::convertToDTO)
-                .toList();
+    public Page<CooperativaDTO> getAll(Pageable pageable) {
+        return cooperativaRepository.findByActivoTrue(pageable)
+                .map(this::convertToDTO);
     }
 
     @Transactional(readOnly = true)
     public CooperativaDTO getById(String ruc) {
-        Cooperativa cooperativa = cooperativaRepository.findByRuc(ruc)
-                .filter(Cooperativa::isActivo)
+        Cooperativa cooperativa = cooperativaRepository.findByRucAndActivoTrue(ruc)
                 .orElseThrow(() -> new ResourceNotFoundException("Cooperativa not found or inactive with RUC: " + ruc));
         return convertToDTO(cooperativa);
     }
 
     @Transactional(readOnly = true)
-    public List<CooperativaDTO> search(String searchTerm) {
-        return cooperativaRepository.searchByNombreOrRuc(searchTerm)
-                .stream()
-                .filter(Cooperativa::isActivo)
-                .map(this::convertToDTO)
-                .toList();
+    public Page<CooperativaDTO> search(String searchTerm, Pageable pageable) {
+        return cooperativaRepository.searchByNombreOrRucAndActivoTrue(searchTerm, pageable)
+                .map(this::convertToDTO);
     }
 
     public CooperativaDTO create(CooperativaCreateRequest request) {

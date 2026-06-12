@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+import java.time.LocalTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +21,7 @@ public class HorarioDTO {
 
     private LocalDate fecha;
 
-    private String horaSalida;
+    private LocalTime horaSalida;
 
     private UnidadDTO unidad;
 

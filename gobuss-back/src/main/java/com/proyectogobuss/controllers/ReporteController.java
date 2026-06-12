@@ -61,7 +61,7 @@ public class ReporteController {
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("filename", "reporte_ventas_ruta.pdf");
+            headers.setContentDisposition(org.springframework.http.ContentDisposition.attachment().filename("reporte_ventas_ruta.pdf").build());
             return ResponseEntity.ok().headers(headers).body(contents);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

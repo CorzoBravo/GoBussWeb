@@ -39,7 +39,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/swagger-ui/**", "/api/v3/api-docs/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/ciudades").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/horarios/search").permitAll()
@@ -56,7 +57,14 @@ public class SecurityConfig {
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
-        configuration.setAllowedOriginPatterns(java.util.List.of("*"));
+        
+        String allowedOrigin = System.getenv("ALLOWED_ORIGIN");
+        java.util.List<String> origins = new java.util.ArrayList<>(java.util.List.of("http://localhost:3000", "http://localhost:5173", "http://localhost:5174"));
+        if (allowedOrigin != null && !allowedOrigin.isEmpty()) {
+            origins.add(allowedOrigin);
+        }
+        configuration.setAllowedOriginPatterns(origins);
+        
         configuration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(java.util.List.of("*"));
         configuration.setAllowCredentials(true);

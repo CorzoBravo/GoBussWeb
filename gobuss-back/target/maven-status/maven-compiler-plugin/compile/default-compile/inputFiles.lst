@@ -1,5 +1,4 @@
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Application.java
-C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\CorsConfig.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\JwtConfig.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\OpenApiConfig.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\SecurityConfig.java
@@ -54,7 +53,6 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\CoopEntities
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\CoopEntities\Conductor.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\CoopEntities\Horario.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\CoopEntities\Unidad.java
-C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\Horario.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\RefreshToken.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\RutaEntities\Ciudad.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\RutaEntities\RutaFinal.java
@@ -99,7 +97,6 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\ReporteServi
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\RutaService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\StorageService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\UnidadService.java
-C:\gobuss-web\gobuss-back\src\main\java\com\Validaciones\validatorsistem.java
 C:\gobuss-web\gobuss-back\src\main\java\Utils\FileUtils.java
 C:\gobuss-web\gobuss-back\src\main\java\Utils\PasswordUtils.java
 C:\gobuss-web\gobuss-back\src\main\java\Utils\PDFUtils.java

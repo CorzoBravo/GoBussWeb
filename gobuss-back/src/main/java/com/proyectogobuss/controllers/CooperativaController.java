@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+
 @RestController
 @RequestMapping("/api/cooperativas")
 @RequiredArgsConstructor
@@ -22,8 +26,9 @@ public class CooperativaController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
-    public ResponseEntity<List<CooperativaDTO>> getAll() {
-        List<CooperativaDTO> cooperativas = cooperativaService.getAll();
+    public ResponseEntity<Page<CooperativaDTO>> getAll(
+            @PageableDefault(size = 10, sort = "nombre") Pageable pageable) {
+        Page<CooperativaDTO> cooperativas = cooperativaService.getAll(pageable);
         return ResponseEntity.ok(cooperativas);
     }
 
@@ -36,8 +41,10 @@ public class CooperativaController {
 
     @GetMapping("/search")
     @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
-    public ResponseEntity<List<CooperativaDTO>> search(@RequestParam String q) {
-        List<CooperativaDTO> cooperativas = cooperativaService.search(q);
+    public ResponseEntity<Page<CooperativaDTO>> search(
+            @RequestParam String q,
+            @PageableDefault(size = 10, sort = "nombre") Pageable pageable) {
+        Page<CooperativaDTO> cooperativas = cooperativaService.search(q, pageable);
         return ResponseEntity.ok(cooperativas);
     }
 

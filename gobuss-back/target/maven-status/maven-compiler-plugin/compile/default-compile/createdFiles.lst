@@ -27,7 +27,6 @@ com\proyectogobuss\Entities\UsersEntities\Cooperativa.class
 Utils\PDFUtils.class
 com\proyectogobuss\dto\cooperativa\CooperativaCreateRequest.class
 com\proyectogobuss\dto\ruta\RutaGeneralDTO$RutaGeneralDTOBuilder.class
-com\Validaciones\validatorsistem.class
 com\proyectogobuss\dto\ruta\RutaFinalUpdateRequest.class
 com\proyectogobuss\repositories\ConductorRepository.class
 com\proyectogobuss\config\JwtConfig.class
@@ -48,7 +47,6 @@ Utils\QRUtils.class
 com\proyectogobuss\dto\ruta\RutaFinalDTO$RutaFinalDTOBuilder.class
 com\proyectogobuss\repositories\RutaFinalRepository.class
 com\proyectogobuss\dto\ayudante\AyudanteDTO.class
-com\proyectogobuss\config\CorsConfig.class
 com\proyectogobuss\dto\horario\HorarioDTO$HorarioDTOBuilder.class
 com\proyectogobuss\Entities\AsientoReservado$EstadoAsiento.class
 com\proyectogobuss\services\RutaService.class
@@ -59,6 +57,7 @@ com\proyectogobuss\dto\horario\HorarioCreateRequest.class
 com\proyectogobuss\services\AuthService.class
 com\proyectogobuss\services\ConductorService.class
 com\proyectogobuss\dto\error\ErrorResponse$ErrorResponseBuilder.class
+com\proyectogobuss\Entities\UsersEntities\User$UserBuilder.class
 com\proyectogobuss\dto\ayudante\AyudanteUpdateRequest.class
 com\proyectogobuss\services\EmailServiceBrevo.class
 com\proyectogobuss\Entities\UsersEntities\Role.class
@@ -86,10 +85,13 @@ com\proyectogobuss\repositories\CooperativaRepository.class
 com\proyectogobuss\exception\GlobalExceptionHandler.class
 com\proyectogobuss\controllers\RutaController.class
 com\proyectogobuss\dto\asiento\AsientoDTO$AsientoDTOBuilder.class
+com\proyectogobuss\Entities\RefreshToken$RefreshTokenBuilder.class
 com\proyectogobuss\dto\auth\TokenRefreshResponse$TokenRefreshResponseBuilder.class
 com\proyectogobuss\controllers\AyudanteController.class
 com\proyectogobuss\repositories\AsientoReservadoRepository.class
 com\proyectogobuss\dto\boleto\BoletoDTO$BoletoDTOBuilder.class
+com\proyectogobuss\Entities\UsersEntities\Cooperativa$CooperativaBuilder.class
+com\proyectogobuss\Entities\CoopEntities\Horario$HorarioBuilder.class
 com\proyectogobuss\dto\asiento\AsientoDTO.class
 com\proyectogobuss\dto\unidad\UnidadDTO.class
 com\proyectogobuss\dto\auth\LoginRequest.class
@@ -98,6 +100,8 @@ com\proyectogobuss\repositories\RutaGeneralRepository.class
 com\proyectogobuss\repositories\AyudanteRepository.class
 com\proyectogobuss\EmailService\BrevoConfig.class
 com\proyectogobuss\exception\UnauthorizedException.class
+com\proyectogobuss\Entities\UsersEntities\Usuario$UsuarioBuilder.class
+com\proyectogobuss\Entities\Boleto$BoletoBuilder.class
 com\proyectogobuss\Application.class
 com\proyectogobuss\dto\auth\LoginResponse.class
 com\proyectogobuss\Entities\RutaEntities\Ciudad.class

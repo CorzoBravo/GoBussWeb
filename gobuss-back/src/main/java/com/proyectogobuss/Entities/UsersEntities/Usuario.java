@@ -1,9 +1,15 @@
 package com.proyectogobuss.Entities.UsersEntities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "usuario")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode(of = "cedula")
 public class Usuario {
 
     @Id
@@ -19,46 +25,7 @@ public class Usuario {
     @Column(nullable = false, length = 100)
     private String correo;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean activo = true;
-
-    public String getCedula() {
-        return cedula;
-    }
-
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
-    }
-
-    public String getNombres() {
-        return nombres;
-    }
-
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
-
-    public String getCelular() {
-        return celular;
-    }
-
-    public void setCelular(String celular) {
-        this.celular = celular;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public boolean isActivo() {
-        return activo;
-    }
-
-    public void setActivo(boolean activo) {
-        this.activo = activo;
-    }
 }

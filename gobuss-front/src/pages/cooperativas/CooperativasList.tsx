@@ -3,6 +3,10 @@ import api from '../../services/api';
 import { Bus, Plus, Search, Edit2, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { CooperativaFormModal } from './CooperativaFormModal';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { EmptyState } from '../../components/ui/EmptyState';
+import { Loading } from '../../components/ui/Loading';
 
 interface Cooperativa {
   ruc: string;
@@ -19,12 +23,18 @@ export const CooperativasList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCooperativa, setEditingCooperativa] = useState<Cooperativa | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchCooperativas = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/cooperativas');
-      setCooperativas(response.data);
+      const url = search 
+        ? `/cooperativas/search?q=${search}&page=${page}&size=10`
+        : `/cooperativas?page=${page}&size=10`;
+      const response = await api.get(url);
+      setCooperativas(response.data.content);
+      setTotalPages(response.data.totalPages);
     } catch (error) {
       toast.error('Error al cargar las cooperativas');
     } finally {
@@ -34,7 +44,7 @@ export const CooperativasList = () => {
 
   useEffect(() => {
     fetchCooperativas();
-  }, []);
+  }, [page, search]);
 
   const handleOpenCreate = () => {
     setEditingCooperativa(null);
@@ -77,13 +87,8 @@ export const CooperativasList = () => {
     }
   };
 
-  const filteredCooperativas = cooperativas.filter(c => 
-    c.nombre.toLowerCase().includes(search.toLowerCase()) || 
-    c.ruc.includes(search)
-  );
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <CooperativaFormModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -93,41 +98,39 @@ export const CooperativasList = () => {
       />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-surface-200">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800 tracking-tight flex items-center">
+          <h2 className="text-2xl font-bold text-surface-800 tracking-tight flex items-center font-display">
             <Bus className="w-6 h-6 mr-2 text-brand-600" />
             Directorio de Cooperativas
           </h2>
-          <p className="text-sm text-slate-500 mt-1 font-medium">Gestiona las cooperativas afiliadas a la terminal.</p>
+          <p className="text-sm text-surface-500 mt-1 font-medium">Gestiona las cooperativas afiliadas a la terminal.</p>
         </div>
-        <button onClick={handleOpenCreate} className="flex items-center px-4 py-2.5 bg-brand-600 text-white font-medium rounded-xl hover:bg-brand-700 transition-colors shadow-sm active:scale-95">
-          <Plus className="w-5 h-5 mr-1.5" />
+        <Button onClick={handleOpenCreate} variant="primary" icon={<Plus className="w-5 h-5" />}>
           Nueva Cooperativa
-        </button>
+        </Button>
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center">
+      <div className="bg-white p-4 rounded-2xl shadow-sm border border-surface-200 flex items-center">
         <div className="relative flex-1 max-w-md">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-slate-400" />
-          </div>
-          <input
-            type="text"
-            className="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent bg-slate-50/50"
+          <Input
+            icon={<Search className="w-5 h-5 text-surface-400" />}
             placeholder="Buscar por nombre o RUC..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(0);
+            }}
           />
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-sm border border-surface-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50/80 text-slate-600 font-semibold border-b border-slate-100">
+            <thead className="bg-surface-50/80 text-surface-600 font-semibold border-b border-surface-200 uppercase tracking-wider text-xs">
               <tr>
                 <th className="px-6 py-4">Cooperativa</th>
                 <th className="px-6 py-4">RUC</th>
@@ -136,50 +139,54 @@ export const CooperativasList = () => {
                 <th className="px-6 py-4 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-surface-100">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-10 text-center text-slate-500">
-                    <div className="flex justify-center items-center space-x-2">
-                      <div className="w-2 h-2 bg-brand-500 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-brand-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                      <div className="w-2 h-2 bg-brand-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                    </div>
+                  <td colSpan={5} className="px-6 py-10">
+                    <Loading mode="bus" message="Cargando cooperativas..." />
                   </td>
                 </tr>
-              ) : filteredCooperativas.length === 0 ? (
+              ) : cooperativas.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-10 text-center text-slate-500">
-                    No se encontraron cooperativas
+                  <td colSpan={5} className="px-6 py-10">
+                    <EmptyState 
+                      icon={Bus}
+                      title="No se encontraron cooperativas"
+                      description={search ? "Intenta con otro término de búsqueda." : "Aún no hay cooperativas registradas en el sistema."}
+                      actionLabel={!search ? "Crear la primera cooperativa" : undefined}
+                      onAction={!search ? handleOpenCreate : undefined}
+                    />
                   </td>
                 </tr>
               ) : (
-                filteredCooperativas.map((coop) => (
-                  <tr key={coop.ruc} className="hover:bg-slate-50/50 transition-colors group">
-                    <td className="px-6 py-4 font-medium text-slate-900">
+                cooperativas.map((coop) => (
+                  <tr key={coop.ruc} className="hover:bg-surface-50 transition-colors group">
+                    <td className="px-6 py-4 font-bold text-surface-900 font-display">
                       {coop.nombre}
                     </td>
-                    <td className="px-6 py-4 text-slate-500 font-mono text-xs">
+                    <td className="px-6 py-4 text-surface-500 font-mono text-xs font-semibold">
                       {coop.ruc}
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-slate-900">{coop.correo}</div>
-                      <div className="text-slate-500 text-xs">{coop.telefono}</div>
+                      <div className="text-surface-900 font-medium">{coop.correo}</div>
+                      <div className="text-surface-500 text-xs">{coop.telefono}</div>
                     </td>
-                    <td className="px-6 py-4 text-slate-500">
+                    <td className="px-6 py-4 text-surface-600 font-medium">
                       {coop.direccion}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button 
                           onClick={() => handleOpenEdit(coop)}
-                          className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
+                          className="p-2 text-surface-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
+                          title="Editar"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button 
                           onClick={() => handleDelete(coop.ruc)}
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                          className="p-2 text-surface-400 hover:text-danger-600 hover:bg-danger-50 rounded-lg transition-colors"
+                          title="Eliminar"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -191,6 +198,33 @@ export const CooperativasList = () => {
             </tbody>
           </table>
         </div>
+        
+        {/* Pagination Controls */}
+        {!loading && totalPages > 1 && (
+          <div className="flex justify-between items-center px-6 py-4 border-t border-surface-200 bg-surface-50">
+            <span className="text-sm text-surface-500 font-medium">
+              Página <span className="font-bold text-surface-800">{page + 1}</span> de <span className="font-bold text-surface-800">{totalPages}</span>
+            </span>
+            <div className="flex space-x-2">
+              <Button 
+                variant="secondary"
+                size="sm"
+                onClick={() => setPage(p => Math.max(0, p - 1))}
+                disabled={page === 0}
+              >
+                Anterior
+              </Button>
+              <Button 
+                variant="secondary"
+                size="sm"
+                onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                disabled={page === totalPages - 1}
+              >
+                Siguiente
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

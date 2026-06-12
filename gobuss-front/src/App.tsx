@@ -14,13 +14,7 @@ import { ReportesList } from './pages/reportes/ReportesList';
 import { BoletosList } from './pages/boletos/BoletosList';
 import { Landing } from './pages/public/Landing';
 import { Register } from './pages/auth/Register';
-
-const Dashboard = () => (
-  <div className="bg-white p-6 rounded-lg shadow-sm border border-slate-200">
-    <h2 className="text-2xl font-bold text-slate-800 mb-4">Bienvenido a GoBuss</h2>
-    <p className="text-slate-600">Selecciona una opción del menú lateral para comenzar.</p>
-  </div>
-);
+import { Dashboard } from './pages/Dashboard';
 
 function App() {
   return (

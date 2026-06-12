@@ -1,13 +1,20 @@
 package com.proyectogobuss.Entities.CoopEntities;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.proyectogobuss.Entities.RutaEntities.RutaFinal;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "horarioruta")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode(of = "idHorario")
 public class Horario {
 
     @Id
@@ -26,55 +33,9 @@ public class Horario {
     private LocalDate fecha;
 
     @Column(name = "hora_salida", nullable = false)
-    private String horaSalida;
+    private LocalTime horaSalida;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean activo = true;
-
-    public int getIdHorario() {
-        return idHorario;
-    }
-
-    public void setIdHorario(int idHorario) {
-        this.idHorario = idHorario;
-    }
-
-    public Unidad getUnidad() {
-        return unidad;
-    }
-
-    public void setUnidad(Unidad unidad) {
-        this.unidad = unidad;
-    }
-
-    public RutaFinal getRutaFinal() {
-        return rutaFinal;
-    }
-
-    public void setRutaFinal(RutaFinal rutaFinal) {
-        this.rutaFinal = rutaFinal;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getHoraSalida() {
-        return horaSalida;
-    }
-
-    public void setHoraSalida(String horaSalida) {
-        this.horaSalida = horaSalida;
-    }
-
-    public boolean isActivo() {
-        return activo;
-    }
-
-    public void setActivo(boolean activo) {
-        this.activo = activo;
-    }
 }

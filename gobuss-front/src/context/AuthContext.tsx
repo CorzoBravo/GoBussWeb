@@ -23,8 +23,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const token = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
+
     if (token && storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        // Decode token to check expiration without external library (payload is base64)
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const isExpired = payload.exp * 1000 < Date.now();
+
+        if (isExpired) {
+          logout();
+        } else {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (e) {
+        logout();
+      }
     }
   }, []);
 

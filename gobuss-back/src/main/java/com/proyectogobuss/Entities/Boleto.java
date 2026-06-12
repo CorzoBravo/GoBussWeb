@@ -1,6 +1,7 @@
 package com.proyectogobuss.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,10 +11,12 @@ import com.proyectogobuss.Entities.UsersEntities.Usuario;
 
 @Entity
 @Table(name = "boleto")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@EqualsAndHashCode(of = "idBoleto")
 public class Boleto {
-    @OneToMany(mappedBy = "boleto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AsientoReservado> asientosAsientoReservados;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idBoleto;
@@ -38,69 +41,10 @@ public class Boleto {
     @Column(name = "cantidad_asientos", nullable = false)
     private int cantidadAsientos;
 
-    @OneToMany(mappedBy = "boleto", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "boleto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AsientoReservado> asientos;
 
-    public Integer getIdBoleto() {
-        return idBoleto;
-    }
-
-    public void setIdBoleto(Integer idBoleto) {
-        this.idBoleto = idBoleto;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Horario getHorario() {
-        return horario;
-    }
-
-    public void setHorario(Horario horario) {
-        this.horario = horario;
-    }
-
-    public LocalDate getFechaViaje() {
-        return fechaViaje;
-    }
-
-    public void setFechaViaje(LocalDate fechaViaje) {
-        this.fechaViaje = fechaViaje;
-    }
-
-    public LocalDateTime getFechaCompra() {
-        return fechaCompra;
-    }
-
-    public double getMonto() {
-        return monto;
-    }
-
-    public void setMonto(double monto) {
-        this.monto = monto;
-    }
-
-    public int getCantidadAsientos() {
-        return cantidadAsientos;
-    }
-
-    public void setCantidadAsientos(int cantidadAsientos) {
-        this.cantidadAsientos = cantidadAsientos;
-    }
-
-    public List<AsientoReservado> getAsientos() {
-        return asientos;
-    }
-
-    public void setAsientos(List<AsientoReservado> asientos) {
-        this.asientos = asientos;
-    }
-
+    @Builder.Default
     @Column(nullable = false)
     private boolean activo = true;
 }

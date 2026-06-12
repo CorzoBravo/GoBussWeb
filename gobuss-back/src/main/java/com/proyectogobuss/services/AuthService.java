@@ -48,27 +48,33 @@ public class AuthService {
         }
 
         String role = user.getRole().name();
-        String nombre = null;
+        String nombre = user.getNombre();
 
-        // Fetch display name based on profile
-        if (user.getRole() == Role.COOPERATIVA) {
-            var coop = cooperativaRepository.findByRuc(username);
-            if (coop.isPresent()) {
-                nombre = coop.get().getNombre();
+        // Fallback for old records without nombre
+        if (nombre == null) {
+            if (user.getRole() == Role.COOPERATIVA) {
+                var coop = cooperativaRepository.findByRuc(username);
+                if (coop.isPresent()) {
+                    nombre = coop.get().getNombre();
+                }
+            } else if (user.getRole() == Role.USUARIO) {
+                var usuario = usuarioRepository.findByCedula(username);
+                if (usuario.isPresent()) {
+                    nombre = usuario.get().getNombres();
+                }
+            } else if (user.getRole() == Role.ADMIN) {
+                nombre = "Administrador";
             }
-        } else if (user.getRole() == Role.USUARIO) {
-            var usuario = usuarioRepository.findByCedula(username);
-            if (usuario.isPresent()) {
-                nombre = usuario.get().getNombres();
-            }
-        } else if (user.getRole() == Role.ADMIN) {
-            nombre = "Administrador";
         }
 
         return buildLoginResponse(username, role, role, username, nombre);
     }
 
-    public LoginResponse registerUsuario(LoginRequest request, String cedula, String nombres, String email) {
+    public LoginResponse registerUsuario(com.proyectogobuss.dto.auth.RegisterRequest request) {
+        String cedula = request.getCedula();
+        String nombres = request.getNombres();
+        String email = request.getEmail();
+
         if (userRepository.existsByUsername(cedula)) {
             throw new UnauthorizedException("Cedula already registered");
         }
@@ -82,6 +88,7 @@ public class AuthService {
         user.setUsername(cedula);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USUARIO);
+        user.setNombre(nombres);
         user.setActivo(true);
         userRepository.save(user);
 
