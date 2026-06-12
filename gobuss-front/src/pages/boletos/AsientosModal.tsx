@@ -20,6 +20,7 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
   const [submitting, setSubmitting] = useState(false);
   const [successBoleto, setSuccessBoleto] = useState<any>(null);
   const [step, setStep] = useState<'SELECCION' | 'PAGO'>('SELECCION');
+  const [horario, setHorario] = useState<any>(null);
 
   // Simulated Payment Form
   const [cardData, setCardData] = useState({
@@ -41,9 +42,13 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
   const fetchAsientos = async () => {
     try {
       setLoading(true);
-      const response = await api.get(`/horarios/${horarioId}/asientos`);
-      const sorted = response.data.sort((a: any, b: any) => a.numeroAsiento - b.numeroAsiento);
+      const [resAsientos, resHorario] = await Promise.all([
+        api.get(`/horarios/${horarioId}/asientos`),
+        api.get(`/horarios/${horarioId}`)
+      ]);
+      const sorted = resAsientos.data.sort((a: any, b: any) => a.numeroAsiento - b.numeroAsiento);
       setAsientos(sorted);
+      setHorario(resHorario.data);
     } catch (error) {
       toast.error('Error al cargar asientos');
       onClose();
@@ -192,7 +197,9 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
             </div>
             <div className="flex justify-between items-center pt-3 border-t border-surface-200 border-dashed">
               <span className="text-surface-600 font-medium">Total a pagar:</span>
-              <span className="text-xl font-black text-brand-600">Calculando...</span>
+              <span className="text-xl font-black text-brand-600">
+                ${horario?.rutaFinal?.precio ? (horario.rutaFinal.precio * selectedIds.length).toFixed(2) : 'Calculando...'}
+              </span>
             </div>
           </div>
 

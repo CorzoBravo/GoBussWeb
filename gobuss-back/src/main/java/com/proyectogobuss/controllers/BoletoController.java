@@ -28,10 +28,17 @@ public class BoletoController {
 
     @PostMapping("/{id}/procesar")
     @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA', 'USUARIO')")
-    public ResponseEntity<Void> procesarYEnviarBoleto(@PathVariable Integer id) {
+    public ResponseEntity<Void> procesarYEnviarBoleto(@PathVariable Integer id, Authentication authentication) {
         Boleto boleto = new Boleto();
         boleto.setIdBoleto(id);
-        boletoService.procesarYEnviarBoleto(boleto);
+        boletoService.procesarYEnviarBoleto(boleto, authentication.getName(), authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/mis")
+    @PreAuthorize("hasRole('USUARIO')")
+    public ResponseEntity<java.util.List<BoletoDTO>> getMisBoletos(Authentication authentication) {
+        String usuarioCedula = authentication.getName();
+        return ResponseEntity.ok(boletoService.getBoletosByUsuario(usuarioCedula));
     }
 }

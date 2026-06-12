@@ -33,11 +33,9 @@ public class HorarioService {
     private final RutaService rutaService;
 
     @Transactional(readOnly = true)
-    public List<HorarioDTO> getByCooperativa(String ruc) {
-        List<Horario> horarios = horarioRepository.findByCooperativaRuc(ruc);
-        return horarios.stream()
-                .map(this::convertToDTO)
-                .toList();
+    public org.springframework.data.domain.Page<HorarioDTO> getByCooperativa(String ruc, org.springframework.data.domain.Pageable pageable) {
+        org.springframework.data.domain.Page<Horario> horarios = horarioRepository.findByCooperativaRuc(ruc, pageable);
+        return horarios.map(this::convertToDTO);
     }
 
     @Transactional(readOnly = true)
@@ -166,6 +164,9 @@ public class HorarioService {
                 .activo(horario.isActivo())
                 .asientosDisponibles(available)
                 .asientosReservados(reserved)
+                .rutaFinal(com.proyectogobuss.dto.ruta.RutaFinalDTO.builder()
+                    .precio(horario.getRutaFinal().getPrecio())
+                    .build())
                 .build();
     }
 }

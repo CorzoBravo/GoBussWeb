@@ -3,7 +3,6 @@ package com.proyectogobuss.Entities;
 import com.proyectogobuss.Entities.CoopEntities.Horario;
 
 import jakarta.persistence.*;
-
 @Entity
 @Table(name = "asiento_reservado", uniqueConstraints = @UniqueConstraint(columnNames = { "idHorario",
         "numero_asiento" }))
@@ -13,6 +12,9 @@ public class AsientoReservado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reserva") 
     private Integer idReserva;
+
+    @Version
+    private Integer version;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "idHorario")

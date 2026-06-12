@@ -28,6 +28,8 @@ export const HorariosList = () => {
   
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -42,7 +44,7 @@ export const HorariosList = () => {
 
   useEffect(() => {
     if (selectedRuc) {
-      fetchData(selectedRuc);
+      fetchData(selectedRuc, page);
     } else {
       setHorarios([]);
       setRutasFinales([]);
@@ -62,15 +64,16 @@ export const HorariosList = () => {
     }
   };
 
-  const fetchData = async (ruc: string) => {
+  const fetchData = async (ruc: string, pageNum: number = 0) => {
     try {
       setLoading(true);
       const [horariosRes, rutasRes, unidadesRes] = await Promise.all([
-        api.get(`/horarios/cooperativa/${ruc}`),
+        api.get(`/horarios/cooperativa/${ruc}?page=${pageNum}&size=10`),
         api.get(`/rutas/cooperativas/${ruc}`),
         api.get(`/cooperativas/${ruc}/unidades`).catch(() => ({ data: [] })) // Handle if unidades fails
       ]);
-      setHorarios(horariosRes.data);
+      setHorarios(horariosRes.data.content);
+      setTotalPages(horariosRes.data.totalPages);
       setRutasFinales(rutasRes.data);
       setUnidades(unidadesRes.data);
     } catch (error) {
@@ -110,7 +113,7 @@ export const HorariosList = () => {
       await api.post(`/horarios/cooperativa/${selectedRuc}`, payload);
       toast.success('Horario creado exitosamente');
       setIsModalOpen(false);
-      fetchData(selectedRuc);
+      fetchData(selectedRuc, page);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Error al crear horario');
     } finally {
@@ -122,7 +125,7 @@ export const HorariosList = () => {
     try {
       await api.patch(`/horarios/cooperativa/${selectedRuc}/${id}/toggle-status`);
       toast.success('Estado actualizado');
-      fetchData(selectedRuc);
+      fetchData(selectedRuc, page);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Error al cambiar estado');
     }
@@ -281,6 +284,26 @@ export const HorariosList = () => {
                 )}
               </tbody>
             </table>
+          </div>
+          {/* Pagination Controls */}
+          <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+            <span className="text-sm text-slate-500">Página {page + 1} de {totalPages}</span>
+            <div className="flex space-x-2">
+              <button 
+                disabled={page === 0} 
+                onClick={() => setPage(p => p - 1)}
+                className="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50"
+              >
+                Anterior
+              </button>
+              <button 
+                disabled={page >= totalPages - 1} 
+                onClick={() => setPage(p => p + 1)}
+                className="px-3 py-1.5 text-sm bg-white border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50"
+              >
+                Siguiente
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -26,6 +26,12 @@ public interface BoletoRepository extends JpaRepository<Boleto, Integer> {
 
     long countByFechaViajeAndHorarioIdHorario(LocalDate fecha, int idHorario);
 
+    @Query("SELECT COALESCE(SUM(b.monto), 0) FROM Boleto b")
+    Double sumMontoTotal();
+
+    @Query("SELECT COUNT(DISTINCT b.horario.idHorario) FROM Boleto b")
+    long countViajesTotal();
+
     @Query("""
         SELECT new com.proyectogobuss.dto.ReporteVentasRutaDTO(
             CONCAT(o.nombre, ' - ', d.nombre),

@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { Card } from '../components/ui/Card';
 import { Users, Bus, MapPin, TrendingUp, DollarSign, CalendarDays } from 'lucide-react';
+import api from '../services/api';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, Legend
@@ -24,6 +26,19 @@ const dataRutas = [
 ];
 
 export const Dashboard = () => {
+  const [stats, setStats] = useState({
+    totalVentas: 0,
+    totalViajes: 0,
+    totalCooperativas: 0,
+    totalUsuarios: 0
+  });
+
+  useEffect(() => {
+    api.get('/admin/dashboard').then(res => {
+      setStats(res.data);
+    }).catch(err => console.error("Error fetching dashboard stats", err));
+  }, []);
+
   return (
     <div className="space-y-8 animate-fade-in">
       <div className="flex justify-between items-end">
@@ -33,7 +48,7 @@ export const Dashboard = () => {
         </div>
         <div className="hidden sm:flex items-center text-sm font-bold text-brand-600 bg-brand-50 px-4 py-2 rounded-xl border border-brand-100">
           <CalendarDays className="w-4 h-4 mr-2" />
-          Últimos 7 días
+          General
         </div>
       </div>
 
@@ -43,7 +58,7 @@ export const Dashboard = () => {
           <div className="flex justify-between items-start">
             <div>
               <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Ingresos Totales</p>
-              <h3 className="text-2xl font-black text-surface-800 mt-2">$24,590.00</h3>
+              <h3 className="text-2xl font-black text-surface-800 mt-2">${stats.totalVentas.toFixed(2)}</h3>
             </div>
             <div className="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center">
               <DollarSign className="w-5 h-5" />
@@ -51,15 +66,15 @@ export const Dashboard = () => {
           </div>
           <div className="mt-4 flex items-center text-sm text-success-600 font-bold">
             <TrendingUp className="w-4 h-4 mr-1" />
-            +12.5% <span className="text-surface-400 font-medium ml-2">vs sem ant.</span>
+            Actualizado
           </div>
         </Card>
 
         <Card className="border-l-4 border-l-accent-500 hover:-translate-y-1 transition-transform cursor-default">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Boletos Vendidos</p>
-              <h3 className="text-2xl font-black text-surface-800 mt-2">1,234</h3>
+              <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Viajes Registrados</p>
+              <h3 className="text-2xl font-black text-surface-800 mt-2">{stats.totalViajes}</h3>
             </div>
             <div className="w-10 h-10 rounded-xl bg-accent-50 text-accent-600 flex items-center justify-center">
               <Users className="w-5 h-5" />
@@ -74,23 +89,23 @@ export const Dashboard = () => {
         <Card className="border-l-4 border-l-info-500 hover:-translate-y-1 transition-transform cursor-default">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Rutas Activas</p>
-              <h3 className="text-2xl font-black text-surface-800 mt-2">48</h3>
+              <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Cooperativas</p>
+              <h3 className="text-2xl font-black text-surface-800 mt-2">{stats.totalCooperativas}</h3>
             </div>
             <div className="w-10 h-10 rounded-xl bg-info-50 text-info-600 flex items-center justify-center">
               <MapPin className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-4 flex items-center text-sm text-surface-500 font-medium">
-            3 nuevas este mes
+            Registradas
           </div>
         </Card>
 
         <Card className="border-l-4 border-l-success-500 hover:-translate-y-1 transition-transform cursor-default">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Flota Operativa</p>
-              <h3 className="text-2xl font-black text-surface-800 mt-2">156</h3>
+              <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Usuarios</p>
+              <h3 className="text-2xl font-black text-surface-800 mt-2">{stats.totalUsuarios}</h3>
             </div>
             <div className="w-10 h-10 rounded-xl bg-success-50 text-success-600 flex items-center justify-center">
               <Bus className="w-5 h-5" />

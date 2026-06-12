@@ -77,7 +77,11 @@ public class CooperativaService {
         return convertToDTO(cooperativa);
     }
 
-    public CooperativaDTO update(String ruc, CooperativaUpdateRequest request) {
+    public CooperativaDTO update(String ruc, CooperativaUpdateRequest request, String authenticatedUsername) {
+        if (!authenticatedUsername.equals("ADMIN") && !authenticatedUsername.equals(ruc)) {
+            throw new com.proyectogobuss.exception.UnauthorizedException("No puedes editar otra cooperativa");
+        }
+
         Cooperativa cooperativa = cooperativaRepository.findByRuc(ruc)
                 .orElseThrow(() -> new ResourceNotFoundException("Cooperativa not found with RUC: " + ruc));
 

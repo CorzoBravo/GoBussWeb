@@ -20,7 +20,7 @@ public interface HorarioRepository extends JpaRepository<Horario, Integer> {
     List<Horario> findActiveByCooperativaRuc(@Param("ruc") String ruc);
 
     @Query("SELECT h FROM Horario h WHERE h.rutaFinal.cooperativa.ruc = :ruc")
-    List<Horario> findByCooperativaRuc(@Param("ruc") String ruc);
+    org.springframework.data.domain.Page<Horario> findByCooperativaRuc(@Param("ruc") String ruc, org.springframework.data.domain.Pageable pageable);
 
     List<Horario> findByUnidadIdUnidad(Integer idUnidad);
 

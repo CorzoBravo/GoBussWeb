@@ -22,9 +22,9 @@ public class AdminService {
     public AdminDashboardDTO getDashboardStats() {
         long totalCooperativas = cooperativaRepository.count();
         long totalUsuarios = usuarioRepository.count();
-        long totalViajes = 0; // Will be implemented with viajes count
-        double totalVentas = 0; // Will be implemented with boletos sum
-        int capacidadPromedio = 0; // Will be implemented with average capacity
+        long totalViajes = boletoRepository.countViajesTotal();
+        double totalVentas = boletoRepository.sumMontoTotal();
+        int capacidadPromedio = 0; // Se puede implementar a futuro con avg capacidad de unidad
 
         return AdminDashboardDTO.builder()
                 .totalCooperativas(totalCooperativas)

@@ -58,8 +58,9 @@ public class CooperativaController {
     @PutMapping("/{ruc}")
     @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
     public ResponseEntity<CooperativaDTO> update(@PathVariable String ruc,
-                                                 @Valid @RequestBody CooperativaUpdateRequest request) {
-        CooperativaDTO cooperativa = cooperativaService.update(ruc, request);
+                                                 @Valid @RequestBody CooperativaUpdateRequest request,
+                                                 org.springframework.security.core.Authentication authentication) {
+        CooperativaDTO cooperativa = cooperativaService.update(ruc, request, authentication.getName());
         return ResponseEntity.ok(cooperativa);
     }
 

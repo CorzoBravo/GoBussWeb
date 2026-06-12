@@ -24,8 +24,10 @@ public class HorarioController {
 
     @GetMapping("/cooperativa/{ruc}")
     @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
-    public ResponseEntity<List<HorarioDTO>> getByCooperativa(@PathVariable String ruc) {
-        return ResponseEntity.ok(horarioService.getByCooperativa(ruc));
+    public ResponseEntity<org.springframework.data.domain.Page<HorarioDTO>> getByCooperativa(
+            @PathVariable String ruc,
+            @org.springframework.data.web.PageableDefault(size = 10, sort = "fecha", direction = org.springframework.data.domain.Sort.Direction.DESC) org.springframework.data.domain.Pageable pageable) {
+        return ResponseEntity.ok(horarioService.getByCooperativa(ruc, pageable));
     }
 
     @GetMapping("/ruta/{rutaId}")

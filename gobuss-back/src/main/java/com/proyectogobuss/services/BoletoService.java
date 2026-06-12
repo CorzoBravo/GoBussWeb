@@ -98,13 +98,29 @@ public class BoletoService {
         try {
             Boleto temp = new Boleto();
             temp.setIdBoleto(boletoId);
-            procesarYEnviarBoleto(temp);
+            procesarYEnviarBoletoInterno(temp);
         } catch (Exception e) {
             log.error("Failed to process async ticket for boleto ID: " + boletoId, e);
         }
     }
 
-    public void procesarYEnviarBoleto(Boleto boleto) {
+    public void procesarYEnviarBoleto(Boleto boleto, String requester, boolean isAdmin) {
+        Boleto boletoDB = boletoRepository.findCompleto(boleto.getIdBoleto());
+        if (boletoDB == null) {
+            throw new ResourceNotFoundException("Boleto no encontrado");
+        }
+        
+        String ownerCedula = boletoDB.getUsuario().getCedula();
+        String coopRuc = boletoDB.getHorario().getRutaFinal().getCooperativa().getRuc();
+        
+        if (!isAdmin && !requester.equals(ownerCedula) && !requester.equals(coopRuc)) {
+            throw new com.proyectogobuss.exception.UnauthorizedException("No tienes permiso para procesar este boleto");
+        }
+        
+        procesarYEnviarBoletoInterno(boletoDB);
+    }
+
+    private void procesarYEnviarBoletoInterno(Boleto boleto) {
         try {
             Boleto boletoDB = boletoRepository.findCompleto(boleto.getIdBoleto());
             File qr = qrService.generarQr(boletoDB);
@@ -114,5 +130,20 @@ public class BoletoService {
             log.error("Error procesando boleto id={}", boleto.getIdBoleto(), e);
             throw new RuntimeException("No se pudo procesar y enviar el boleto", e);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<BoletoDTO> getBoletosByUsuario(String usuarioCedula) {
+        return boletoRepository.findByUsuarioCedula(usuarioCedula).stream().map(boleto -> BoletoDTO.builder()
+                .idBoleto(boleto.getIdBoleto())
+                .usuarioCedula(boleto.getUsuario().getCedula())
+                .usuarioNombre(boleto.getUsuario().getNombres())
+                .horarioId(boleto.getHorario().getIdHorario())
+                .rutaInfo(boleto.getHorario().getRutaFinal().getRutaGeneral().getOrigen().getNombre() + " - " + boleto.getHorario().getRutaFinal().getRutaGeneral().getDestino().getNombre())
+                .fechaViaje(boleto.getFechaViaje())
+                .monto(boleto.getMonto())
+                .cantidadAsientos(boleto.getCantidadAsientos())
+                .asientos(boleto.getAsientos() != null ? boleto.getAsientos().stream().map(AsientoReservado::getIdReserva).toList() : List.of())
+                .build()).toList();
     }
 }
