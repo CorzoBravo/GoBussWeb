@@ -1,6 +1,7 @@
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Application.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\CorsConfig.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\JwtConfig.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\OpenApiConfig.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\SecurityConfig.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\AdminController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\AuthController.java
@@ -16,11 +17,14 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\admin\AdminDashbo
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\asiento\AsientoDTO.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\auth\LoginRequest.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\auth\LoginResponse.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\auth\RegisterRequest.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\auth\TokenRefreshRequest.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\auth\TokenRefreshResponse.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\ayudante\AyudanteCreateRequest.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\ayudante\AyudanteDTO.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\ayudante\AyudanteUpdateRequest.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\boleto\BoletoCreateRequest.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\boleto\BoletoDTO.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\conductor\ConductorCreateRequest.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\conductor\ConductorDTO.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\conductor\ConductorUpdateRequest.java

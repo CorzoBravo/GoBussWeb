@@ -15,14 +15,14 @@ public class ReporteOcupacionHorarioDTO {
 
     public ReporteOcupacionHorarioDTO(
             String ruta,
-            java.sql.Date fecha,
+            LocalDate fecha,
             String hora,
             String unidad,
             Long asientosOcupados,
             Integer capacidad
     ) {
         this.ruta = ruta;
-        this.fecha = fecha.toLocalDate();
+        this.fecha = fecha;
         this.hora = hora;
         this.unidad = unidad;
         this.asientosOcupados = asientosOcupados;

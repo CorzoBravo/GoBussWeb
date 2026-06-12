@@ -2,6 +2,7 @@ package com.proyectogobuss.controllers;
 
 import com.proyectogobuss.dto.auth.LoginRequest;
 import com.proyectogobuss.dto.auth.LoginResponse;
+import com.proyectogobuss.dto.auth.RegisterRequest;
 import com.proyectogobuss.dto.auth.TokenRefreshRequest;
 import com.proyectogobuss.dto.auth.TokenRefreshResponse;
 import com.proyectogobuss.services.AuthService;
@@ -21,6 +22,22 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
+        // We reuse LoginRequest structure internally in authService, but pass details explicitly
+        LoginRequest loginReq = new LoginRequest();
+        loginReq.setId(request.getCedula());
+        loginReq.setPassword(request.getPassword());
+        
+        LoginResponse response = authService.registerUsuario(
+            loginReq, 
+            request.getCedula(), 
+            request.getNombres(), 
+            request.getEmail()
+        );
         return ResponseEntity.ok(response);
     }
 

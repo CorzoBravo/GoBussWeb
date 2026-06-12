@@ -1,3 +1,4 @@
+com\proyectogobuss\config\OpenApiConfig.class
 com\proyectogobuss\Entities\RutaEntities\RutaGeneral.class
 com\proyectogobuss\dto\ruta\RutaFinalDTO.class
 com\proyectogobuss\dto\horario\HorarioDTO.class
@@ -13,6 +14,7 @@ com\proyectogobuss\dto\ReporteVentasRutaDTO.class
 com\proyectogobuss\services\ReporteService.class
 com\proyectogobuss\exception\ResourceNotFoundException.class
 com\proyectogobuss\services\UnidadService.class
+com\proyectogobuss\dto\auth\RegisterRequest.class
 com\proyectogobuss\controllers\UnidadController.class
 com\proyectogobuss\Entities\AsientoReservado.class
 com\proyectogobuss\repositories\UserRepository.class
@@ -32,6 +34,7 @@ com\proyectogobuss\config\JwtConfig.class
 com\proyectogobuss\services\AyudanteService.class
 com\proyectogobuss\controllers\AdminController.class
 com\proyectogobuss\services\AdminService.class
+com\proyectogobuss\dto\boleto\BoletoCreateRequest.class
 com\proyectogobuss\dto\auth\TokenRefreshResponse.class
 com\proyectogobuss\services\HorarioService.class
 com\proyectogobuss\dto\cooperativa\CooperativaDTO$CooperativaDTOBuilder.class
@@ -68,6 +71,7 @@ com\proyectogobuss\controllers\CooperativaController.class
 com\proyectogobuss\services\QRService.class
 com\proyectogobuss\Entities\CoopEntities\Horario.class
 com\proyectogobuss\dto\ruta\RutaGeneralDTO.class
+com\proyectogobuss\dto\boleto\BoletoDTO.class
 com\proyectogobuss\dto\auth\LoginResponse$UserDetailsResponse$UserDetailsResponseBuilder.class
 com\proyectogobuss\repositories\HorarioRepository.class
 com\proyectogobuss\Entities\UsersEntities\User.class
@@ -85,6 +89,7 @@ com\proyectogobuss\dto\asiento\AsientoDTO$AsientoDTOBuilder.class
 com\proyectogobuss\dto\auth\TokenRefreshResponse$TokenRefreshResponseBuilder.class
 com\proyectogobuss\controllers\AyudanteController.class
 com\proyectogobuss\repositories\AsientoReservadoRepository.class
+com\proyectogobuss\dto\boleto\BoletoDTO$BoletoDTOBuilder.class
 com\proyectogobuss\dto\asiento\AsientoDTO.class
 com\proyectogobuss\dto\unidad\UnidadDTO.class
 com\proyectogobuss\dto\auth\LoginRequest.class
