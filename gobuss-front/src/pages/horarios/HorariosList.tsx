@@ -25,6 +25,7 @@ export const HorariosList = () => {
   const [horarios, setHorarios] = useState<Horario[]>([]);
   const [rutasFinales, setRutasFinales] = useState<any[]>([]);
   const [unidades, setUnidades] = useState<any[]>([]);
+  const [conductores, setConductores] = useState<any[]>([]);
   
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
@@ -49,6 +50,7 @@ export const HorariosList = () => {
       setHorarios([]);
       setRutasFinales([]);
       setUnidades([]);
+      setConductores([]);
     }
   }, [selectedRuc]);
 
@@ -67,15 +69,17 @@ export const HorariosList = () => {
   const fetchData = async (ruc: string, pageNum: number = 0) => {
     try {
       setLoading(true);
-      const [horariosRes, rutasRes, unidadesRes] = await Promise.all([
+      const [horariosRes, rutasRes, unidadesRes, conductoresRes] = await Promise.all([
         api.get(`/horarios/cooperativa/${ruc}?page=${pageNum}&size=10`),
         api.get(`/rutas/cooperativas/${ruc}`),
-        api.get(`/cooperativas/${ruc}/unidades`).catch(() => ({ data: [] })) // Handle if unidades fails
+        api.get(`/cooperativas/${ruc}/unidades`).catch(() => ({ data: [] })),
+        api.get(`/cooperativas/${ruc}/conductores`).catch(() => ({ data: [] }))
       ]);
       setHorarios(horariosRes.data.content);
       setTotalPages(horariosRes.data.totalPages);
       setRutasFinales(rutasRes.data);
       setUnidades(unidadesRes.data);
+      setConductores(conductoresRes.data);
     } catch (error) {
       toast.error('Error al cargar datos');
     } finally {
@@ -107,11 +111,16 @@ export const HorariosList = () => {
         rutaFinalId: data.rutaFinalId,
         unidadId: data.unidadId,
         fecha: data.fecha,
-        horaSalida: data.horaSalida + ":00" // Ensure HH:mm:ss if required by backend, though HH:mm might be parsed correctly by string
+        horaSalida: data.horaSalida + ":00", // Ensure HH:mm:ss if required by backend, though HH:mm might be parsed correctly by string
+        conductorCedula: data.conductorCedula,
+        isRecurrente: data.isRecurrente,
+        diasSemana: data.diasSemana,
+        fechaFin: data.fechaFin
       };
 
-      await api.post(`/horarios/cooperativa/${selectedRuc}`, payload);
-      toast.success('Horario creado exitosamente');
+      const res = await api.post(`/horarios/cooperativa/${selectedRuc}`, payload);
+      const message = data.isRecurrente ? `Se han creado ${res.data.length} horarios recurrentes` : 'Horario creado exitosamente';
+      toast.success(message);
       setIsModalOpen(false);
       fetchData(selectedRuc, page);
     } catch (error: any) {
@@ -144,6 +153,7 @@ export const HorariosList = () => {
         onSubmit={handleSubmit}
         rutasFinales={rutasFinales}
         unidades={unidades}
+        conductores={conductores}
         loading={submitting}
       />
 
@@ -245,6 +255,9 @@ export const HorariosList = () => {
                           <span className="font-medium">Unidad {horario.unidad.id}</span>
                         </div>
                         <div className="text-xs text-slate-500 mt-0.5">Placa: {horario.unidad.placa}</div>
+                        {horario.conductorNombre && (
+                           <div className="text-xs text-brand-600 font-medium mt-1">Conductor: {horario.conductorNombre}</div>
+                        )}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col space-y-1">

@@ -57,20 +57,44 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
     }
   };
 
-  const handleToggleSeat = (idReserva: number, estado: string) => {
-    if (estado !== 'DISPONIBLE') return;
+  const handleToggleSeat = async (idReserva: number, estado: string) => {
+    if (estado !== 'DISPONIBLE' && estado !== 'RESERVADO') return;
 
-    setSelectedIds(prev => {
-      if (prev.includes(idReserva)) {
-        return prev.filter(id => id !== idReserva);
-      } else {
-        if (prev.length >= 5) {
-          toast.info('Máximo 5 asientos por compra');
-          return prev;
-        }
-        return [...prev, idReserva];
+    if (selectedIds.includes(idReserva)) {
+      try {
+        await api.delete(`/reservas/${idReserva}`);
+        setSelectedIds(prev => prev.filter(id => id !== idReserva));
+        setAsientos(prev => prev.map(a => a.idReserva === idReserva ? { ...a, estado: 'DISPONIBLE' } : a));
+      } catch (e) {
+        toast.error('Error al liberar asiento');
       }
-    });
+    } else {
+      if (selectedIds.length >= 5) {
+        toast.info('Máximo 5 asientos por compra');
+        return;
+      }
+      if (estado !== 'DISPONIBLE') {
+        toast.error('El asiento ya no está disponible');
+        return;
+      }
+      try {
+        await api.post(`/reservas?horarioId=${horarioId}`, [idReserva]);
+        setSelectedIds(prev => [...prev, idReserva]);
+        setAsientos(prev => prev.map(a => a.idReserva === idReserva ? { ...a, estado: 'RESERVADO' } : a));
+      } catch (e: any) {
+        toast.error(e.response?.data?.message || 'No se pudo reservar el asiento');
+        fetchAsientos();
+      }
+    }
+  };
+
+  const handleClose = async () => {
+    if (!successBoleto && selectedIds.length > 0) {
+      try {
+        await Promise.all(selectedIds.map(id => api.delete(`/reservas/${id}`)));
+      } catch(e) {}
+    }
+    onClose();
   };
 
   const triggerConfetti = () => {
@@ -158,7 +182,7 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
           </div>
 
           <Button
-            onClick={onClose}
+            onClick={handleClose}
             variant="primary"
             size="lg"
             className="w-full mt-8"
@@ -172,7 +196,7 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
 
   if (step === 'PAGO') {
     return (
-      <Modal isOpen={isOpen} onClose={onClose} title="Finalizar Pago" size="md">
+      <Modal isOpen={isOpen} onClose={handleClose} title="Finalizar Pago" size="md">
         <div className="space-y-6 animate-fade-in">
           {/* Progress Indicator */}
           <div className="flex items-center justify-between px-8 relative">
@@ -278,7 +302,7 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Selección de Asientos" size="xl">
+    <Modal isOpen={isOpen} onClose={handleClose} title="Selección de Asientos" size="xl">
       <div className="flex flex-col md:flex-row gap-8 animate-fade-in">
         
         {/* Mapa de asientos */}
@@ -306,11 +330,11 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
                 return (
                   <div key={a.idReserva} className={`flex justify-center ${isPasillo ? 'mr-6' : ''}`}>
                     <button
-                      disabled={!isDisponible}
+                      disabled={a.estado === 'OCUPADO' || (a.estado === 'RESERVADO' && !isSelected)}
                       onClick={() => handleToggleSeat(a.idReserva, a.estado)}
                       className={`
                         w-12 h-14 rounded-t-2xl rounded-b-lg flex items-center justify-center text-sm font-bold transition-all duration-300
-                        ${!isDisponible 
+                        ${(!isDisponible && !isSelected)
                           ? 'bg-surface-200 text-surface-400 cursor-not-allowed opacity-70' 
                           : isSelected 
                             ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/40 transform -translate-y-1 scale-105 border border-brand-400' 
@@ -318,6 +342,11 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
                       `}
                     >
                       {a.numeroAsiento}
+                      {isSelected && a.tiempoRestanteSegundos !== undefined && a.tiempoRestanteSegundos !== null && (
+                        <div className="absolute -top-2 -right-2 bg-danger-500 text-white text-[9px] w-5 h-5 flex items-center justify-center rounded-full animate-pulse shadow-sm">
+                          {Math.floor(a.tiempoRestanteSegundos / 60)}:{(a.tiempoRestanteSegundos % 60).toString().padStart(2, '0')}
+                        </div>
+                      )}
                     </button>
                   </div>
                 );
@@ -382,7 +411,7 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
             </Button>
             <Button
               variant="ghost"
-              onClick={onClose}
+              onClick={handleClose}
               className="w-full"
             >
               Cancelar

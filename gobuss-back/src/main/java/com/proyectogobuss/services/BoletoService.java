@@ -33,6 +33,7 @@ public class BoletoService {
     private final HorarioRepository horarioRepository;
     private final UsuarioRepository usuarioRepository;
     private final AsientoReservadoRepository asientoRepository;
+    private final com.proyectogobuss.repositories.ReservaTemporalRepository reservaRepository;
 
     @Transactional
     public BoletoDTO crearBoleto(BoletoCreateRequest request, String usuarioCedula) {
@@ -52,10 +53,23 @@ public class BoletoService {
             if (asiento.getHorario().getIdHorario() != horario.getIdHorario()) {
                 throw new IllegalArgumentException("El asiento " + asiento.getNumeroAsiento() + " no pertenece a este horario");
             }
-            if (asiento.getEstado() != AsientoReservado.EstadoAsiento.DISPONIBLE) {
-                throw new IllegalStateException("El asiento " + asiento.getNumeroAsiento() + " no está disponible");
+            if (asiento.getEstado() != AsientoReservado.EstadoAsiento.RESERVADO) {
+                throw new IllegalStateException("El asiento " + asiento.getNumeroAsiento() + " no está reservado. Debe reservarlo antes de pagar.");
             }
+            
+            // Check that this user holds the reservation
+            com.proyectogobuss.Entities.ReservaTemporal reserva = reservaRepository.findByAsientoReservadoIdReservaAndActivoTrue(asiento.getIdReserva())
+                .orElseThrow(() -> new IllegalStateException("La reserva para el asiento " + asiento.getNumeroAsiento() + " expiró o no existe."));
+            
+            if (!reserva.getUsuario().getCedula().equals(usuarioCedula)) {
+                throw new SecurityException("El asiento " + asiento.getNumeroAsiento() + " está reservado por otra persona.");
+            }
+
             asiento.setEstado(AsientoReservado.EstadoAsiento.OCUPADO);
+            
+            // Deactivate reservation
+            reserva.setActivo(false);
+            reservaRepository.save(reserva);
         }
 
         Double precioUnitario = horario.getRutaFinal().getPrecio();
@@ -144,6 +158,37 @@ public class BoletoService {
                 .monto(boleto.getMonto())
                 .cantidadAsientos(boleto.getCantidadAsientos())
                 .asientos(boleto.getAsientos() != null ? boleto.getAsientos().stream().map(AsientoReservado::getIdReserva).toList() : List.of())
+                .activo(boleto.isActivo())
                 .build()).toList();
+    }
+
+    @Transactional
+    public void cancelarBoleto(Integer boletoId, String usuarioCedula) {
+        Boleto boleto = boletoRepository.findById(boletoId)
+                .orElseThrow(() -> new ResourceNotFoundException("Boleto no encontrado"));
+
+        if (!boleto.getUsuario().getCedula().equals(usuarioCedula)) {
+            throw new SecurityException("No tienes permiso para cancelar este boleto");
+        }
+
+        if (!boleto.isActivo()) {
+            throw new IllegalStateException("El boleto ya está cancelado");
+        }
+
+        // Logic could enforce that we cannot cancel past trips, e.g.
+        if (boleto.getFechaViaje().isBefore(LocalDate.now())) {
+            throw new IllegalStateException("No se puede cancelar un boleto de un viaje pasado");
+        }
+
+        boleto.setActivo(false);
+        boletoRepository.save(boleto);
+
+        if (boleto.getAsientos() != null) {
+            for (AsientoReservado asiento : boleto.getAsientos()) {
+                asiento.setEstado(AsientoReservado.EstadoAsiento.DISPONIBLE);
+                asiento.setBoleto(null);
+                asientoRepository.save(asiento);
+            }
+        }
     }
 }

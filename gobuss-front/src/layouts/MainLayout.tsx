@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Bus, LogOut, Map, LayoutDashboard, Calendar, ClipboardList, Users, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Bus, LogOut, Map, LayoutDashboard, Calendar, ClipboardList, Users, ChevronLeft, ChevronRight, Ticket } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const MainLayout: React.FC = () => {
@@ -24,6 +24,7 @@ export const MainLayout: React.FC = () => {
     { name: 'Cooperativas', path: '/cooperativas', icon: Bus, roles: ['ADMIN'] },
     { name: 'Rutas', path: '/rutas', icon: Map, roles: ['ADMIN', 'COOPERATIVA'] },
     { name: 'Horarios', path: '/horarios', icon: Calendar, roles: ['ADMIN', 'COOPERATIVA'] },
+    { name: 'Mis Boletos', path: '/mis-boletos', icon: Ticket, roles: ['USUARIO'] },
     { name: 'Conductores', path: '/conductores', icon: Users, roles: ['ADMIN', 'COOPERATIVA'] },
     { name: 'Ayudantes', path: '/ayudantes', icon: Users, roles: ['ADMIN', 'COOPERATIVA'] },
     { name: 'Reportes', path: '/reportes', icon: ClipboardList, roles: ['ADMIN', 'COOPERATIVA'] },

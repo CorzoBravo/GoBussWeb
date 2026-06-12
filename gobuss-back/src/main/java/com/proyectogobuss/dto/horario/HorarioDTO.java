@@ -32,4 +32,8 @@ public class HorarioDTO {
     private Integer asientosDisponibles;
 
     private Integer asientosReservados;
+
+    private String conductorCedula;
+
+    private String conductorNombre;
 }

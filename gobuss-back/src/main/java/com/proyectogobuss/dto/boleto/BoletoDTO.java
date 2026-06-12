@@ -24,4 +24,5 @@ public class BoletoDTO {
     private Double monto;
     private Integer cantidadAsientos;
     private List<Integer> asientos;
+    private Boolean activo;
 }

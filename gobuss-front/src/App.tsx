@@ -12,6 +12,7 @@ import { RutasList } from './pages/rutas/RutasList';
 import { HorariosList } from './pages/horarios/HorariosList';
 import { ReportesList } from './pages/reportes/ReportesList';
 import { BoletosList } from './pages/boletos/BoletosList';
+import { MisBoletos } from './pages/boletos/MisBoletos';
 import { Landing } from './pages/public/Landing';
 import { Register } from './pages/auth/Register';
 import { Dashboard } from './pages/Dashboard';
@@ -39,8 +40,9 @@ function App() {
                 <Route path="cooperativas" element={<CooperativasList />} />
               </Route>
 
-              <Route element={<RoleRoute roles={['ADMIN', 'COOPERATIVA', 'USUARIO']} />}>
+              <Route element={<RoleRoute roles={['USUARIO']} />}>
                 <Route path="boletos" element={<BoletosList />} />
+                <Route path="mis-boletos" element={<MisBoletos />} />
               </Route>
 
               <Route element={<RoleRoute roles={['ADMIN', 'COOPERATIVA']} />}>

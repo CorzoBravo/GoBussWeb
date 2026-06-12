@@ -138,7 +138,7 @@ public class ReportePDFService {
                 for (ReporteOcupacionHorarioDTO r : datos) {
                         tabla.addCell(new Phrase(r.getRuta(), normal));
                         tabla.addCell(new Phrase(r.getFecha().toString(), normal));
-                        tabla.addCell(new Phrase(r.getHora(), normal));
+                        tabla.addCell(new Phrase(String.valueOf(r.getHora()), normal));
                         tabla.addCell(new Phrase(r.getUnidad(), normal));
                         tabla.addCell(new Phrase(String.valueOf(r.getAsientosOcupados()), normal));
                         tabla.addCell(new Phrase(String.valueOf(r.getCapacidad()), normal));

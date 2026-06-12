@@ -24,4 +24,13 @@ public class HorarioCreateRequest {
 
     @NotNull(message = "Hora salida is required")
     private LocalTime horaSalida;
+
+    @NotNull(message = "Conductor is required")
+    private String conductorCedula;
+
+    private Boolean isRecurrente;
+
+    private java.util.List<Integer> diasSemana;
+
+    private LocalDate fechaFin;
 }

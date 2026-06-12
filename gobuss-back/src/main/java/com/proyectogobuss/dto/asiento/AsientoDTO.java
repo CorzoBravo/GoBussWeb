@@ -18,4 +18,6 @@ public class AsientoDTO {
     private String estado;
 
     private Integer numeroBoleto;
+
+    private Long tiempoRestanteSegundos;
 }

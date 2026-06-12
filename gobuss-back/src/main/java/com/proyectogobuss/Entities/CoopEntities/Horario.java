@@ -35,6 +35,10 @@ public class Horario {
     @Column(name = "hora_salida", nullable = false)
     private LocalTime horaSalida;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "conductor_cedula", nullable = true)
+    private Conductor conductor;
+
     @Builder.Default
     @Column(nullable = false)
     private boolean activo = true;

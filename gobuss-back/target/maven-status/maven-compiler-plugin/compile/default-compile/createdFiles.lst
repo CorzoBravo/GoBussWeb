@@ -23,6 +23,7 @@ com\proyectogobuss\security\JwtAuthenticationFilter.class
 com\proyectogobuss\dto\unidad\UnidadDTO$UnidadDTOBuilder.class
 com\proyectogobuss\dto\ruta\CiudadCreateRequest.class
 com\proyectogobuss\controllers\ReporteController.class
+com\proyectogobuss\controllers\ReservaTemporalController.class
 com\proyectogobuss\Entities\UsersEntities\Cooperativa.class
 Utils\PDFUtils.class
 com\proyectogobuss\dto\cooperativa\CooperativaCreateRequest.class
@@ -49,6 +50,7 @@ com\proyectogobuss\repositories\RutaFinalRepository.class
 com\proyectogobuss\dto\ayudante\AyudanteDTO.class
 com\proyectogobuss\dto\horario\HorarioDTO$HorarioDTOBuilder.class
 com\proyectogobuss\Entities\AsientoReservado$EstadoAsiento.class
+com\proyectogobuss\Entities\ReservaTemporal.class
 com\proyectogobuss\services\RutaService.class
 com\proyectogobuss\dto\unidad\UnidadUpdateRequest.class
 com\proyectogobuss\repositories\CiudadRepository.class
@@ -64,6 +66,7 @@ com\proyectogobuss\Entities\UsersEntities\Role.class
 com\proyectogobuss\controllers\AuthController.class
 com\proyectogobuss\Entities\Boleto.class
 com\proyectogobuss\repositories\UsuarioRepository.class
+com\proyectogobuss\repositories\ReservaTemporalRepository.class
 com\proyectogobuss\dto\auth\TokenRefreshRequest.class
 com\proyectogobuss\dto\error\ErrorResponse.class
 com\proyectogobuss\controllers\CooperativaController.class
@@ -88,6 +91,7 @@ com\proyectogobuss\dto\asiento\AsientoDTO$AsientoDTOBuilder.class
 com\proyectogobuss\Entities\RefreshToken$RefreshTokenBuilder.class
 com\proyectogobuss\dto\auth\TokenRefreshResponse$TokenRefreshResponseBuilder.class
 com\proyectogobuss\controllers\AyudanteController.class
+com\proyectogobuss\services\ReservaTemporalService.class
 com\proyectogobuss\repositories\AsientoReservadoRepository.class
 com\proyectogobuss\dto\boleto\BoletoDTO$BoletoDTOBuilder.class
 com\proyectogobuss\Entities\UsersEntities\Cooperativa$CooperativaBuilder.class

@@ -44,7 +44,7 @@ public class HorarioController {
 
     @PostMapping("/cooperativa/{ruc}")
     @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
-    public ResponseEntity<HorarioDTO> create(
+    public ResponseEntity<List<HorarioDTO>> create(
             @PathVariable String ruc,
             @Valid @RequestBody HorarioCreateRequest request) {
         return new ResponseEntity<>(horarioService.create(ruc, request), HttpStatus.CREATED);

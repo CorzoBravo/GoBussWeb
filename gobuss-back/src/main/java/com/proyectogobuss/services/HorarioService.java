@@ -31,6 +31,8 @@ public class HorarioService {
     private final UnidadRepository unidadRepository;
     private final AsientoReservadoRepository asientoRepository;
     private final RutaService rutaService;
+    private final com.proyectogobuss.repositories.ReservaTemporalRepository reservaRepository;
+    private final com.proyectogobuss.repositories.ConductorRepository conductorRepository;
 
     @Transactional(readOnly = true)
     public org.springframework.data.domain.Page<HorarioDTO> getByCooperativa(String ruc, org.springframework.data.domain.Pageable pageable) {
@@ -53,7 +55,7 @@ public class HorarioService {
         return convertToDTO(horario);
     }
 
-    public HorarioDTO create(String ruc, HorarioCreateRequest request) {
+    public List<HorarioDTO> create(String ruc, HorarioCreateRequest request) {
         // Validar existencia de RutaFinal y Unidad
         RutaFinal ruta = rutaFinalRepository.findById(request.getRutaFinalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Ruta final not found"));
@@ -69,12 +71,47 @@ public class HorarioService {
             throw new ResourceNotFoundException("Unidad does not belong to this cooperativa");
         }
 
-        // Crear Horario
+        // Validar conductor
+        com.proyectogobuss.Entities.CoopEntities.Conductor conductor = conductorRepository.findById(request.getConductorCedula())
+                .orElseThrow(() -> new ResourceNotFoundException("Conductor not found"));
+
+        if (!conductor.getCooperativa().getRuc().equals(ruc)) {
+            throw new ResourceNotFoundException("Conductor does not belong to this cooperativa");
+        }
+
+        java.util.List<HorarioDTO> results = new java.util.ArrayList<>();
+        
+        if (Boolean.TRUE.equals(request.getIsRecurrente())) {
+            if (request.getFechaFin() == null || request.getDiasSemana() == null || request.getDiasSemana().isEmpty()) {
+                throw new IllegalArgumentException("FechaFin y diasSemana son requeridos para recurrencia");
+            }
+            if (request.getFechaFin().isBefore(request.getFecha())) {
+                throw new IllegalArgumentException("FechaFin no puede ser antes de Fecha");
+            }
+            LocalDate currentDate = request.getFecha();
+            while (!currentDate.isAfter(request.getFechaFin())) {
+                // DayOfWeek in java.time is 1 (Monday) to 7 (Sunday)
+                if (request.getDiasSemana().contains(currentDate.getDayOfWeek().getValue())) {
+                    Horario horario = createSingleHorario(ruta, unidad, conductor, currentDate, request.getHoraSalida());
+                    results.add(convertToDTO(horario));
+                }
+                currentDate = currentDate.plusDays(1);
+            }
+        } else {
+            Horario horario = createSingleHorario(ruta, unidad, conductor, request.getFecha(), request.getHoraSalida());
+            results.add(convertToDTO(horario));
+        }
+
+        return results;
+    }
+
+    private Horario createSingleHorario(RutaFinal ruta, Unidad unidad, com.proyectogobuss.Entities.CoopEntities.Conductor conductor, LocalDate fecha, java.time.LocalTime horaSalida) {
         Horario horario = new Horario();
         horario.setRutaFinal(ruta);
         horario.setUnidad(unidad);
-        horario.setFecha(request.getFecha());
-        horario.setHoraSalida(request.getHoraSalida());
+        horario.setConductor(conductor);
+        horario.setFecha(fecha);
+        horario.setHoraSalida(horaSalida);
         horario.setActivo(true);
 
         horario = horarioRepository.save(horario);
@@ -82,8 +119,7 @@ public class HorarioService {
 
         // Generar AsientosReservados
         generateAsientos(horario, unidad.getCapacidad());
-
-        return convertToDTO(horario);
+        return horario;
     }
 
     private void generateAsientos(Horario horario, Integer capacidad) {
@@ -116,12 +152,23 @@ public class HorarioService {
     public List<AsientoDTO> getAsientos(Integer horarioId) {
         List<AsientoReservado> asientos = asientoRepository.findByHorarioIdHorario(horarioId);
         return asientos.stream()
-                .map(a -> AsientoDTO.builder()
+                .map(a -> {
+                    Long tiempoRestante = null;
+                    if (a.getEstado() == AsientoReservado.EstadoAsiento.RESERVADO) {
+                        java.util.Optional<com.proyectogobuss.Entities.ReservaTemporal> reserva = reservaRepository.findByAsientoReservadoIdReservaAndActivoTrue(a.getIdReserva());
+                        if (reserva.isPresent()) {
+                            java.time.Duration duration = java.time.Duration.between(java.time.LocalDateTime.now(), reserva.get().getFechaExpiracion());
+                            tiempoRestante = duration.getSeconds() > 0 ? duration.getSeconds() : 0;
+                        }
+                    }
+                    return AsientoDTO.builder()
                         .idReserva(a.getIdReserva())
                         .numeroAsiento(a.getNumeroAsiento())
                         .estado(a.getEstado().name())
                         .numeroBoleto(a.getBoleto() != null ? a.getBoleto().getIdBoleto() : null)
-                        .build())
+                        .tiempoRestanteSegundos(tiempoRestante)
+                        .build();
+                })
                 .toList();
     }
 
@@ -164,6 +211,8 @@ public class HorarioService {
                 .activo(horario.isActivo())
                 .asientosDisponibles(available)
                 .asientosReservados(reserved)
+                .conductorCedula(horario.getConductor() != null ? horario.getConductor().getCedula() : null)
+                .conductorNombre(horario.getConductor() != null ? horario.getConductor().getNombre() : null)
                 .rutaFinal(com.proyectogobuss.dto.ruta.RutaFinalDTO.builder()
                     .precio(horario.getRutaFinal().getPrecio())
                     .build())

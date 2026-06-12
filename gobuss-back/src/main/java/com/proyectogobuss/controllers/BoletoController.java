@@ -19,7 +19,7 @@ public class BoletoController {
     private final BoletoService boletoService;
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA', 'USUARIO')")
+    @PreAuthorize("hasRole('USUARIO')")
     public ResponseEntity<BoletoDTO> crearBoleto(@Valid @RequestBody BoletoCreateRequest request, Authentication authentication) {
         String usuarioCedula = authentication.getName(); // JWT subject (ID of user)
         BoletoDTO boletoDTO = boletoService.crearBoleto(request, usuarioCedula);
@@ -27,7 +27,7 @@ public class BoletoController {
     }
 
     @PostMapping("/{id}/procesar")
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA', 'USUARIO')")
+    @PreAuthorize("hasRole('USUARIO')")
     public ResponseEntity<Void> procesarYEnviarBoleto(@PathVariable Integer id, Authentication authentication) {
         Boleto boleto = new Boleto();
         boleto.setIdBoleto(id);
@@ -40,5 +40,13 @@ public class BoletoController {
     public ResponseEntity<java.util.List<BoletoDTO>> getMisBoletos(Authentication authentication) {
         String usuarioCedula = authentication.getName();
         return ResponseEntity.ok(boletoService.getBoletosByUsuario(usuarioCedula));
+    }
+
+    @PatchMapping("/{id}/cancelar")
+    @PreAuthorize("hasRole('USUARIO')")
+    public ResponseEntity<Void> cancelarBoleto(@PathVariable Integer id, Authentication authentication) {
+        String usuarioCedula = authentication.getName();
+        boletoService.cancelarBoleto(id, usuarioCedula);
+        return ResponseEntity.ok().build();
     }
 }

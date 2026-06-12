@@ -10,6 +10,7 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\Conductor
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\CooperativaController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\HorarioController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\ReporteController.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\ReservaTemporalController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\RutaController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\UnidadController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\admin\AdminDashboardDTO.java
@@ -54,6 +55,7 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\CoopEntities
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\CoopEntities\Horario.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\CoopEntities\Unidad.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\RefreshToken.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\ReservaTemporal.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\RutaEntities\Ciudad.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\RutaEntities\RutaFinal.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\RutaEntities\RutaGeneral.java
@@ -72,6 +74,7 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\repositories\Conducto
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\repositories\CooperativaRepository.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\repositories\HorarioRepository.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\repositories\RefreshTokenRepository.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\repositories\ReservaTemporalRepository.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\repositories\RutaFinalRepository.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\repositories\RutaGeneralRepository.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\repositories\UnidadRepository.java
@@ -94,6 +97,7 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\QRService.ja
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\RefreshTokenService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\ReportePDFService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\ReporteService.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\ReservaTemporalService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\RutaService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\StorageService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\UnidadService.java

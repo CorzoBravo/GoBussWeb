@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/actuator/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/boletos/**").hasRole("USUARIO")
                         .requestMatchers(HttpMethod.GET, "/api/ciudades").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/horarios/search").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
