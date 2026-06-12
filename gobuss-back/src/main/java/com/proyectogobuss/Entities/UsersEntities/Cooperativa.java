@@ -34,4 +34,15 @@ public class Cooperativa {
     @Builder.Default
     @Column(nullable = false)
     private boolean activo = true;
+
+    public enum EstadoCooperativa {
+        PENDIENTE,
+        APROBADA,
+        RECHAZADA
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private EstadoCooperativa estado = EstadoCooperativa.PENDIENTE;
 }

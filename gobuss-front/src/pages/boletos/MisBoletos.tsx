@@ -14,6 +14,7 @@ interface Boleto {
   cantidadAsientos: number;
   asientos: number[];
   activo: boolean;
+  montoReembolso?: number;
 }
 
 export const MisBoletos = () => {
@@ -38,9 +39,15 @@ export const MisBoletos = () => {
 
   const handleDownloadPDF = async (idBoleto: number) => {
     try {
-      // In a real scenario, this endpoint should return the PDF or its URL
-      // await api.get(`/boletos/${idBoleto}/pdf`);
-      toast.info('Descarga de PDF simulada para el boleto ' + idBoleto);
+      const response = await api.get(`/boletos/${idBoleto}/pdf`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `boleto_${idBoleto}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      if (link.parentNode) link.parentNode.removeChild(link);
+      toast.success('Boleto descargado exitosamente');
     } catch (error) {
       toast.error('Error al descargar el PDF');
     }
@@ -111,7 +118,12 @@ export const MisBoletos = () => {
                       ${boleto.monto.toFixed(2)}
                     </div>
                     {!boleto.activo && (
-                      <span className="text-[10px] font-bold text-danger-600 uppercase bg-danger-50 px-2 py-0.5 rounded-full mt-1">Cancelado</span>
+                      <div className="flex flex-col items-end mt-1">
+                        <span className="text-[10px] font-bold text-danger-600 uppercase bg-danger-50 px-2 py-0.5 rounded-full">Cancelado</span>
+                        {boleto.montoReembolso !== undefined && (
+                          <span className="text-[10px] text-surface-500 font-medium mt-1">Reembolsado: ${boleto.montoReembolso.toFixed(2)}</span>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -150,6 +162,7 @@ export const MisBoletos = () => {
                   <button 
                     onClick={() => handleCancelarBoleto(boleto.idBoleto)}
                     className="flex-1 py-2 bg-white border border-danger-200 text-danger-600 text-sm font-semibold rounded-xl hover:bg-danger-50 hover:border-danger-300 transition-colors shadow-sm"
+                    title="Se reembolsa 100% si cancelas con 24h de anticipación"
                   >
                     Cancelar
                   </button>

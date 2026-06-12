@@ -47,4 +47,7 @@ public class Boleto {
     @Builder.Default
     @Column(nullable = false)
     private boolean activo = true;
+
+    @Column(name = "monto_reembolso")
+    private Double montoReembolso;
 }

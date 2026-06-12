@@ -49,4 +49,13 @@ public class BoletoController {
         boletoService.cancelarBoleto(id, usuarioCedula);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping(value = "/{id}/pdf", produces = org.springframework.http.MediaType.APPLICATION_PDF_VALUE)
+    @PreAuthorize("hasAnyRole('USUARIO', 'ADMIN', 'COOPERATIVA')")
+    public ResponseEntity<byte[]> descargarPdfBoleto(@PathVariable Integer id, Authentication authentication) {
+        byte[] pdfBytes = boletoService.descargarPdfBoleto(id, authentication.getName(), authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
+        return ResponseEntity.ok()
+                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"boleto_" + id + ".pdf\"")
+                .body(pdfBytes);
+    }
 }

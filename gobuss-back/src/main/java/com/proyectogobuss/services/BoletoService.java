@@ -146,6 +146,29 @@ public class BoletoService {
         }
     }
 
+    public byte[] descargarPdfBoleto(Integer boletoId, String requester, boolean isAdmin) {
+        Boleto boletoDB = boletoRepository.findCompleto(boletoId);
+        if (boletoDB == null) {
+            throw new ResourceNotFoundException("Boleto no encontrado");
+        }
+        
+        String ownerCedula = boletoDB.getUsuario().getCedula();
+        String coopRuc = boletoDB.getHorario().getRutaFinal().getCooperativa().getRuc();
+        
+        if (!isAdmin && !requester.equals(ownerCedula) && !requester.equals(coopRuc)) {
+            throw new com.proyectogobuss.exception.UnauthorizedException("No tienes permiso para descargar este boleto");
+        }
+
+        try {
+            File qr = qrService.generarQr(boletoDB);
+            File pdf = pdfService.generarPdf(boletoDB, qr);
+            return java.nio.file.Files.readAllBytes(pdf.toPath());
+        } catch (Exception e) {
+            log.error("Error generando PDF para boleto id={}", boletoId, e);
+            throw new RuntimeException("No se pudo generar el PDF", e);
+        }
+    }
+
     @Transactional(readOnly = true)
     public List<BoletoDTO> getBoletosByUsuario(String usuarioCedula) {
         return boletoRepository.findByUsuarioCedula(usuarioCedula).stream().map(boleto -> BoletoDTO.builder()
@@ -159,6 +182,7 @@ public class BoletoService {
                 .cantidadAsientos(boleto.getCantidadAsientos())
                 .asientos(boleto.getAsientos() != null ? boleto.getAsientos().stream().map(AsientoReservado::getIdReserva).toList() : List.of())
                 .activo(boleto.isActivo())
+                .montoReembolso(boleto.getMontoReembolso())
                 .build()).toList();
     }
 
@@ -175,11 +199,25 @@ public class BoletoService {
             throw new IllegalStateException("El boleto ya está cancelado");
         }
 
-        // Logic could enforce that we cannot cancel past trips, e.g.
-        if (boleto.getFechaViaje().isBefore(LocalDate.now())) {
-            throw new IllegalStateException("No se puede cancelar un boleto de un viaje pasado");
+        java.time.LocalDateTime horaViaje = java.time.LocalDateTime.of(boleto.getHorario().getFecha(), boleto.getHorario().getHoraSalida());
+        java.time.LocalDateTime ahora = java.time.LocalDateTime.now();
+
+        if (ahora.isAfter(horaViaje)) {
+            throw new IllegalStateException("No se puede cancelar un viaje que ya pasó");
         }
 
+        // Política de cancelación 24h
+        long horasRestantes = java.time.Duration.between(ahora, horaViaje).toHours();
+        double montoReembolso = 0.0;
+        
+        if (horasRestantes >= 24) {
+            montoReembolso = boleto.getMonto(); // 100% de reembolso simulado
+            log.info("Cancelación con >24h. Reembolso total de ${} para boleto {}", montoReembolso, boleto.getIdBoleto());
+        } else {
+            log.info("Cancelación con <24h. Sin reembolso para boleto {}", boleto.getIdBoleto());
+        }
+
+        boleto.setMontoReembolso(montoReembolso);
         boleto.setActivo(false);
         boletoRepository.save(boleto);
 

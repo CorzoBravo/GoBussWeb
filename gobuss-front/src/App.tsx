@@ -16,6 +16,7 @@ import { MisBoletos } from './pages/boletos/MisBoletos';
 import { Landing } from './pages/public/Landing';
 import { Register } from './pages/auth/Register';
 import { Dashboard } from './pages/Dashboard';
+import { ConductorDashboard } from './pages/conductor/ConductorDashboard';
 
 function App() {
   return (
@@ -43,6 +44,10 @@ function App() {
               <Route element={<RoleRoute roles={['USUARIO']} />}>
                 <Route path="boletos" element={<BoletosList />} />
                 <Route path="mis-boletos" element={<MisBoletos />} />
+              </Route>
+
+              <Route element={<RoleRoute roles={['CONDUCTOR']} />}>
+                <Route path="conductor-dashboard" element={<ConductorDashboard />} />
               </Route>
 
               <Route element={<RoleRoute roles={['ADMIN', 'COOPERATIVA']} />}>

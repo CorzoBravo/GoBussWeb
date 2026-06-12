@@ -27,7 +27,13 @@ public class CooperativaController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
     public ResponseEntity<Page<CooperativaDTO>> getAll(
-            @PageableDefault(size = 10, sort = "nombre") Pageable pageable) {
+            @PageableDefault(size = 10, sort = "nombre") Pageable pageable,
+            org.springframework.security.core.Authentication auth) {
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (!isAdmin) {
+            CooperativaDTO dto = cooperativaService.getById(auth.getName());
+            return ResponseEntity.ok(new org.springframework.data.domain.PageImpl<>(List.of(dto), pageable, 1));
+        }
         Page<CooperativaDTO> cooperativas = cooperativaService.getAll(pageable);
         return ResponseEntity.ok(cooperativas);
     }
@@ -43,7 +49,18 @@ public class CooperativaController {
     @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
     public ResponseEntity<Page<CooperativaDTO>> search(
             @RequestParam String q,
-            @PageableDefault(size = 10, sort = "nombre") Pageable pageable) {
+            @PageableDefault(size = 10, sort = "nombre") Pageable pageable,
+            org.springframework.security.core.Authentication auth) {
+        boolean isAdmin = auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        if (!isAdmin) {
+            CooperativaDTO dto = cooperativaService.getById(auth.getName());
+            // Si busca algo y coincide con su nombre o ruc, devolver su dto, si no vacío
+            if (dto.getNombre().toLowerCase().contains(q.toLowerCase()) || dto.getRuc().contains(q)) {
+                return ResponseEntity.ok(new org.springframework.data.domain.PageImpl<>(List.of(dto), pageable, 1));
+            } else {
+                return ResponseEntity.ok(new org.springframework.data.domain.PageImpl<>(List.of(), pageable, 0));
+            }
+        }
         Page<CooperativaDTO> cooperativas = cooperativaService.search(q, pageable);
         return ResponseEntity.ok(cooperativas);
     }
@@ -69,5 +86,19 @@ public class CooperativaController {
     public ResponseEntity<Void> delete(@PathVariable String ruc) {
         cooperativaService.delete(ruc);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{ruc}/aprobar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CooperativaDTO> aprobar(@PathVariable String ruc) {
+        CooperativaDTO cooperativa = cooperativaService.aprobar(ruc);
+        return ResponseEntity.ok(cooperativa);
+    }
+
+    @PatchMapping("/{ruc}/rechazar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CooperativaDTO> rechazar(@PathVariable String ruc) {
+        CooperativaDTO cooperativa = cooperativaService.rechazar(ruc);
+        return ResponseEntity.ok(cooperativa);
     }
 }

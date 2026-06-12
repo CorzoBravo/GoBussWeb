@@ -24,8 +24,10 @@ public class ConductorService {
 
     private final ConductorRepository conductorRepository;
     private final CooperativaRepository cooperativaRepository;
-    private final RutaFinalRepository rutaFinalRepository;
+    private final com.proyectogobuss.repositories.RutaFinalRepository rutaFinalRepository;
     private final UnidadRepository unidadRepository;
+    private final com.proyectogobuss.repositories.UserRepository userRepository;
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public List<ConductorDTO> getByCooperativa(String ruc) {
@@ -65,6 +67,17 @@ public class ConductorService {
         }
         if (request.getIdUnidadAsignada() != null) {
             conductor.setUnidadAsignada(unidadRepository.findById(request.getIdUnidadAsignada()).orElse(null));
+        }
+
+        // Crear usuario para que pueda iniciar sesión
+        if (!userRepository.existsByUsername(request.getCedula())) {
+            com.proyectogobuss.Entities.UsersEntities.User authUser = new com.proyectogobuss.Entities.UsersEntities.User();
+            authUser.setUsername(request.getCedula());
+            authUser.setPassword(passwordEncoder.encode(request.getCedula()));
+            authUser.setRole(com.proyectogobuss.Entities.UsersEntities.Role.CONDUCTOR);
+            authUser.setNombre(request.getNombre());
+            authUser.setActivo(true);
+            userRepository.save(authUser);
         }
 
         return convertToDTO(conductorRepository.save(conductor));

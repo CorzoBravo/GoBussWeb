@@ -7,6 +7,7 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\AuthContr
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\AyudanteController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\BoletoController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\ConductorController.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\ConductorOperativoController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\CooperativaController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\HorarioController.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\controllers\ReporteController.java
@@ -34,6 +35,7 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\cooperativa\Coope
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\error\ErrorResponse.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\horario\HorarioCreateRequest.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\horario\HorarioDTO.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\horario\PasajeroDTO.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\ReporteOcupacionHorarioDTO.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\ReporteVentasFechaDTO.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\ReporteVentasRutaDTO.java

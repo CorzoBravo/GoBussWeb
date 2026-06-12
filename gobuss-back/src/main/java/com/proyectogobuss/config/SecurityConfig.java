@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/ciudades").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/horarios/search").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/conductores-app/**").hasRole("CONDUCTOR")
                         .requestMatchers("/api/cooperativas/**").hasAnyRole("ADMIN", "COOPERATIVA")
                         .requestMatchers("/api/usuarios/**").hasRole("USUARIO")
                         .anyRequest().authenticated()

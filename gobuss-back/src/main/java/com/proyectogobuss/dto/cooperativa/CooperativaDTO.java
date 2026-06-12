@@ -20,4 +20,6 @@ public class CooperativaDTO {
     private String correo;
 
     private String telefono;
+    
+    private String estado;
 }

@@ -50,14 +50,18 @@ public class AuthService {
         String role = user.getRole().name();
         String nombre = user.getNombre();
 
-        // Fallback for old records without nombre
-        if (nombre == null) {
-            if (user.getRole() == Role.COOPERATIVA) {
-                var coop = cooperativaRepository.findByRuc(username);
-                if (coop.isPresent()) {
-                    nombre = coop.get().getNombre();
+        if (user.getRole() == Role.COOPERATIVA) {
+            var coop = cooperativaRepository.findByRuc(username);
+            if (coop.isPresent()) {
+                if (coop.get().getEstado() == com.proyectogobuss.Entities.UsersEntities.Cooperativa.EstadoCooperativa.PENDIENTE) {
+                    throw new UnauthorizedException("La cuenta de su cooperativa está PENDIENTE de aprobación por un administrador.");
+                } else if (coop.get().getEstado() == com.proyectogobuss.Entities.UsersEntities.Cooperativa.EstadoCooperativa.RECHAZADA) {
+                    throw new UnauthorizedException("La solicitud de su cooperativa ha sido RECHAZADA.");
                 }
-            } else if (user.getRole() == Role.USUARIO) {
+                if (nombre == null) nombre = coop.get().getNombre();
+            }
+        } else if (nombre == null) {
+            if (user.getRole() == Role.USUARIO) {
                 var usuario = usuarioRepository.findByCedula(username);
                 if (usuario.isPresent()) {
                     nombre = usuario.get().getNombres();

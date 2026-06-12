@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { Card } from '../components/ui/Card';
 import { Users, Bus, MapPin, TrendingUp, DollarSign, CalendarDays } from 'lucide-react';
 import api from '../services/api';
@@ -33,11 +35,21 @@ export const Dashboard = () => {
     totalUsuarios: 0
   });
 
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   useEffect(() => {
-    api.get('/admin/dashboard').then(res => {
-      setStats(res.data);
-    }).catch(err => console.error("Error fetching dashboard stats", err));
-  }, []);
+    if (user?.role === 'CONDUCTOR') {
+      navigate('/conductor-dashboard');
+      return;
+    }
+
+    if (user?.role === 'ADMIN' || user?.role === 'COOPERATIVA') {
+        api.get('/admin/dashboard').then(res => {
+          setStats(res.data);
+        }).catch(err => console.error("Error fetching dashboard stats", err));
+    }
+  }, [user, navigate]);
 
   return (
     <div className="space-y-8 animate-fade-in">

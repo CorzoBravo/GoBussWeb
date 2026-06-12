@@ -200,6 +200,42 @@ public class HorarioService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<HorarioDTO> getByConductor(String conductorCedula, LocalDate fecha) {
+        return horarioRepository.findByConductorCedulaAndFecha(conductorCedula, fecha)
+                .stream()
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<com.proyectogobuss.dto.horario.PasajeroDTO> getPasajerosByHorario(Integer horarioId) {
+        List<AsientoReservado> asientos = asientoRepository.findByHorarioIdHorario(horarioId);
+        
+        return asientos.stream()
+                .filter(a -> a.getEstado() == AsientoReservado.EstadoAsiento.OCUPADO || a.getEstado() == AsientoReservado.EstadoAsiento.RESERVADO)
+                .map(a -> {
+                    String cedula = "";
+                    String nombre = "";
+                    String boletoId = "";
+                    if (a.getBoleto() != null) {
+                        boletoId = String.valueOf(a.getBoleto().getIdBoleto());
+                        if (a.getBoleto().getUsuario() != null) {
+                            cedula = a.getBoleto().getUsuario().getCedula();
+                            nombre = a.getBoleto().getUsuario().getNombres();
+                        }
+                    }
+                    return com.proyectogobuss.dto.horario.PasajeroDTO.builder()
+                            .cedula(cedula)
+                            .nombre(nombre)
+                            .numeroAsiento(a.getNumeroAsiento())
+                            .numeroBoleto(boletoId)
+                            .estado(a.getEstado().name())
+                            .build();
+                })
+                .toList();
+    }
+
     private HorarioDTO convertToDTO(Horario horario) {
         int available = getAvailableSeats(horario.getIdHorario());
         int reserved = (int) asientoRepository.countByHorarioIdHorarioAndEstado(horario.getIdHorario(), AsientoReservado.EstadoAsiento.RESERVADO);

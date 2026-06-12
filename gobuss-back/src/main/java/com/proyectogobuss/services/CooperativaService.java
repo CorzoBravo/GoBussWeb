@@ -124,6 +124,20 @@ public class CooperativaService {
         log.info("Cooperativa logically deleted: {}", ruc);
     }
 
+    public CooperativaDTO aprobar(String ruc) {
+        Cooperativa cooperativa = cooperativaRepository.findByRuc(ruc)
+                .orElseThrow(() -> new ResourceNotFoundException("Cooperativa not found"));
+        cooperativa.setEstado(Cooperativa.EstadoCooperativa.APROBADA);
+        return convertToDTO(cooperativaRepository.save(cooperativa));
+    }
+
+    public CooperativaDTO rechazar(String ruc) {
+        Cooperativa cooperativa = cooperativaRepository.findByRuc(ruc)
+                .orElseThrow(() -> new ResourceNotFoundException("Cooperativa not found"));
+        cooperativa.setEstado(Cooperativa.EstadoCooperativa.RECHAZADA);
+        return convertToDTO(cooperativaRepository.save(cooperativa));
+    }
+
     private CooperativaDTO convertToDTO(Cooperativa cooperativa) {
         return CooperativaDTO.builder()
                 .ruc(cooperativa.getRuc())
@@ -131,6 +145,7 @@ public class CooperativaService {
                 .direccion(cooperativa.getDireccion())
                 .correo(cooperativa.getCorreo())
                 .telefono(cooperativa.getTelefono())
+                .estado(cooperativa.getEstado() != null ? cooperativa.getEstado().name() : "PENDIENTE")
                 .build();
     }
 }

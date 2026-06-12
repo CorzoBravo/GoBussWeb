@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
-import { Bus, Plus, Search, Edit2, Trash2 } from 'lucide-react';
+import { Bus, Plus, Search, Edit2, Trash2, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 import { toast } from 'sonner';
 import { CooperativaFormModal } from './CooperativaFormModal';
 import { Button } from '../../components/ui/Button';
@@ -14,9 +15,11 @@ interface Cooperativa {
   direccion: string;
   correo: string;
   telefono: string;
+  estado: string;
 }
 
 export const CooperativasList = () => {
+  const { user } = useAuth();
   const [cooperativas, setCooperativas] = useState<Cooperativa[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -134,6 +137,7 @@ export const CooperativasList = () => {
               <tr>
                 <th className="px-6 py-4">Cooperativa</th>
                 <th className="px-6 py-4">RUC</th>
+                <th className="px-6 py-4">Estado</th>
                 <th className="px-6 py-4">Contacto</th>
                 <th className="px-6 py-4">Dirección</th>
                 <th className="px-6 py-4 text-right">Acciones</th>
@@ -142,13 +146,13 @@ export const CooperativasList = () => {
             <tbody className="divide-y divide-surface-100">
               {loading ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-10">
+                  <td colSpan={6} className="px-6 py-10">
                     <Loading type="bus" text="Cargando cooperativas..." />
                   </td>
                 </tr>
               ) : cooperativas.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-10">
+                  <td colSpan={6} className="px-6 py-10">
                     <EmptyState 
                       icon={<Bus />}
                       title="No se encontraron cooperativas"
@@ -168,6 +172,26 @@ export const CooperativasList = () => {
                       {coop.ruc}
                     </td>
                     <td className="px-6 py-4">
+                      {coop.estado === 'PENDIENTE' && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-warning-50 text-warning-700 border border-warning-200">
+                          <Clock className="w-3 h-3 mr-1" />
+                          Pendiente
+                        </span>
+                      )}
+                      {coop.estado === 'APROBADA' && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-success-50 text-success-700 border border-success-200">
+                          <CheckCircle2 className="w-3 h-3 mr-1" />
+                          Aprobada
+                        </span>
+                      )}
+                      {coop.estado === 'RECHAZADA' && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-danger-50 text-danger-700 border border-danger-200">
+                          <XCircle className="w-3 h-3 mr-1" />
+                          Rechazada
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
                       <div className="text-surface-900 font-medium">{coop.correo}</div>
                       <div className="text-surface-500 text-xs">{coop.telefono}</div>
                     </td>
@@ -176,6 +200,42 @@ export const CooperativasList = () => {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        
+                        {user?.role === 'ADMIN' && coop.estado === 'PENDIENTE' && (
+                          <>
+                            <button 
+                              onClick={async () => {
+                                try {
+                                  await api.patch(`/cooperativas/${coop.ruc}/aprobar`);
+                                  toast.success('Cooperativa aprobada');
+                                  fetchCooperativas();
+                                } catch (e) {
+                                  toast.error('Error al aprobar');
+                                }
+                              }}
+                              className="p-2 text-success-600 hover:bg-success-50 rounded-lg transition-colors"
+                              title="Aprobar"
+                            >
+                              <CheckCircle2 className="w-4 h-4" />
+                            </button>
+                            <button 
+                              onClick={async () => {
+                                try {
+                                  await api.patch(`/cooperativas/${coop.ruc}/rechazar`);
+                                  toast.success('Cooperativa rechazada');
+                                  fetchCooperativas();
+                                } catch (e) {
+                                  toast.error('Error al rechazar');
+                                }
+                              }}
+                              className="p-2 text-danger-600 hover:bg-danger-50 rounded-lg transition-colors"
+                              title="Rechazar"
+                            >
+                              <XCircle className="w-4 h-4" />
+                            </button>
+                          </>
+                        )}
+
                         <button 
                           onClick={() => handleOpenEdit(coop)}
                           className="p-2 text-surface-400 hover:text-brand-600 hover:bg-brand-50 rounded-lg transition-colors"
