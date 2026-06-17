@@ -3,7 +3,7 @@ WORKDIR /app
 ENV MAVEN_OPTS="-Xmx512m"
 COPY pom.xml .
 COPY src src
-RUN mvn clean package -DskipTests -B > build.log 2>&1 || (cat build.log && exit 1)
+RUN mvn clean package -DskipTests -B || mvn clean package -DskipTests -B || mvn clean package -DskipTests -B
 
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
