@@ -252,3 +252,103 @@ Varias expresiones como `{cond && <Componente/>}` pueden renderizar `0` o `false
 | Múltiples .tsx | B3 bajo |
 | `.env.example` | B4 bajo |
 | `docker-compose.yml` | B5 bajo |
+
+---
+
+## Auditoría YAGNI / Ponytail Mode — Hallazgos de Campo
+
+> **Auditoría ejecutada:** 2026-06-16
+> **Principio rector:** "The best code is the code that was never written."
+
+### Resumen de Impacto
+
+| Principio | Hallazgos | Líneas eliminables |
+|-----------|-----------|--------------------|
+| 🗑️ YAGNI (código muerto) | 6 | ~158 |
+| 📚 Stdlib (sobre ingeniería) | 3 | ~12 |
+| 🏗️ Plataforma (no reinventar) | 2 | ~22 |
+| 📦 No new dependencies | 1 | ~1 |
+| 〰️ One-liners | 4 | ~30 |
+| 🎯 MVC (código mínimo) | 7 | ~385 |
+| **Total** | **23** | **~608** |
+
+---
+
+### 🗑️ YAGNI — Código que no necesita existir
+
+| ID | Archivo | Línea | Problema | Líneas |
+|----|---------|-------|----------|--------|
+| Y1 | `PasswordUtils.java` | 1-22 | SHA-256 custom **no usado** (Spring Security usa BCrypt). Cero imports. | **22** |
+| Y2 | `BrevoConfig.java` | 1-37 | Carga manual de `.properties` **duplicada** por `EmailServiceBrevo.java` con `@Value`. Cero imports. | **37** |
+| Y3 | `MisBoletos.tsx` | 77-84 | `<input>` sin `value`/`onChange` — decoración que no filtra nada | **8** |
+| Y4 | `Dashboard.tsx` | 12-28 | `dataIngresos` y `dataRutas` — mock data hardcodeada que nunca se reemplaza | **21** |
+| Y5 | `AsientosModal.tsx` | 230-273 | Formulario de tarjeta (número, fecha, CVC) que recolecta datos **nunca enviados**. PCI compliance risk. | **45** |
+| Y6 | `Landing.tsx` | 74-97 | 3 inputs + botón "Buscar" sin handlers — UI decorativa | **25** |
+
+---
+
+### 📚 Stdlib — Usar biblioteca estándar en vez de custom
+
+| ID | Archivo | Línea | Problema |
+|----|---------|-------|----------|
+| S1 | `EmailServiceBrevo.java` | 75,78,83 | `System.out/err.println` + `e.printStackTrace()` → usar `@Slf4j` + `log` |
+| S2 | `BoletoService.java` | 110-118 | Crea objeto `Boleto` temporal como wrapper de `Integer` → pasar `Integer` directamente |
+| S3 | `HorarioService.java` | 117,126-132 | `for` + `save()` individual en cada iteración → `saveAll()` batch |
+
+---
+
+### 🏗️ Plataforma — Usar features nativas del lenguaje/framework
+
+| ID | Archivo | Línea | Problema |
+|----|---------|-------|----------|
+| P1 | `CooperativaService.java` | 81 | Compara `username.equals("ADMIN")` en vez de usar `SecurityContextHolder.getAuthentication().getAuthorities()` |
+| P2 | `CooperativaService.java` | 81 | Spring Security ya provee `hasRole("ADMIN")` — no reinventar autorización |
+
+---
+
+### 〰️ One-liners — Simplificaciones drásticas
+
+| ID | Archivo | Línea | Problema | Simplificación |
+|----|---------|-------|----------|----------------|
+| O1 | `Unidad.java`, `Conductor.java`, etc. | 7 entidades | ~280 líneas de getters/setters manuales | `@Data` (7 líneas) |
+| O2 | `AuthService.java` | 56-58 | FQCN `com.proyectogobuss.Entities...EstadoCooperativa.PENDIENTE` | Import + `EstadoCooperativa.PENDIENTE` |
+| O3 | `ConductorFormModal.tsx` | 36 | `setValue(key as any, value)` | Tipar correctamente |
+| O4 | `AyudanteFormModal.tsx` | 33 | `setValue(key as any, value)` | Tipar correctamente |
+
+---
+
+### 🎯 MVC — Código Mínimo Viable
+
+| ID | Archivo | Problema | Líneas actuales | Líneas mínimas |
+|----|---------|----------|-----------------|----------------|
+| V1 | 7 entidades sin Lombok | Boilerplate manual | ~280 | ~30 |
+| V2 | 19 archivos con `any` | 52 ocurrencias de tipo inseguro | ~52 | ~0 (tipar) |
+| V3 | 13 archivos con `slate` | Inconsistencia Tailwind `slate` vs `surface` | ~162 líneas a corregir | ~0 (reemplazar) |
+| V4 | `AsientosModal.tsx` countdown | `tiempoRestanteSegundos` renderizado sin decrementar | ~5 líneas | ~5 + setInterval |
+| V5 | `CooperativasList.tsx` | Sin debounce en search | ~3 líneas | ~5 (agregar debounce) |
+| V6 | `HorariosList.tsx` | `page` no se resetea al cambiar cooperativa | ~3 líneas | ~4 (agregar setPage) |
+
+---
+
+### Resumen de Reducción de Líneas
+
+```
+🔥 YAGNI (dead code a eliminar):             6 archivos      ~158 líneas
+📚 Stdlib (reemplazar por estándar):          3 archivos       ~12 líneas
+🏗️ Plataforma (usar framework):               2 archivos       ~22 líneas
+〰️ One-liners (simplificar):                 10+ archivos     ~273 líneas
+🎯 MVC (mínimo viable):                       7+ categorías   ~143 líneas
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧹 TOTAL ESTIMADO DE REDUCCIÓN:                                   ~608 líneas
+📊 LÍNEAS ACTUALES (frontend + backend):                         ~10.805
+📉 LÍNEAS POST-LIMPIEZA:                                         ~10.197
+📈 REDUCCIÓN PORCENTUAL:                                           ~5.6%
+```
+
+### Checklist de Acción Inmediata (Prioridad YAGNI)
+
+- [ ] **Y1-Y2**: Borrar `PasswordUtils.java` y `BrevoConfig.java` (59 líneas, impacto 0)
+- [ ] **Y3-Y6**: Eliminar UI muerta en `MisBoletos`, `Dashboard`, `AsientosModal`, `Landing` (~99 líneas)
+- [ ] **O1**: Migrar 7 entidades a `@Data` (~250 líneas eliminadas)
+- [ ] **P1**: Reemplazar string `"ADMIN"` por `SecurityContextHolder`
+- [ ] **S1**: Reemplazar `System.out` por `@Slf4j`
