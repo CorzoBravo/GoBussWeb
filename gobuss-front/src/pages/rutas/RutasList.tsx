@@ -26,7 +26,7 @@ export const RutasList = () => {
 
       {/* Tabs */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-1.5 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-1">
-        {user?.role === 'ADMIN' && (
+        {(user?.role === 'ADMIN' || user?.role === 'COOPERATIVA') && (
           <>
             <button
               onClick={() => setActiveTab('ciudades')}

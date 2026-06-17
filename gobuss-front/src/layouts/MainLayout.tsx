@@ -29,6 +29,7 @@ export const MainLayout: React.FC = () => {
     { name: 'Mi Viaje', path: '/dashboard/conductor-dashboard', icon: Bus, roles: ['CONDUCTOR'] },
     { name: 'Conductores', path: '/dashboard/conductores', icon: Users, roles: ['ADMIN', 'COOPERATIVA'] },
     { name: 'Ayudantes', path: '/dashboard/ayudantes', icon: Users, roles: ['ADMIN', 'COOPERATIVA'] },
+    { name: 'Unidades', path: '/dashboard/unidades', icon: Bus, roles: ['ADMIN', 'COOPERATIVA'] },
     { name: 'Reportes', path: '/dashboard/reportes', icon: ClipboardList, roles: ['ADMIN', 'COOPERATIVA'] },
   ];
 

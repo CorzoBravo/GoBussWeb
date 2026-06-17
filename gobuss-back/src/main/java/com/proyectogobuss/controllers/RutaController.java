@@ -27,14 +27,14 @@ public class RutaController {
     }
 
     @PostMapping("/ciudades")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
     public ResponseEntity<CiudadDTO> createCiudad(@Valid @RequestBody CiudadCreateRequest request) {
         CiudadDTO ciudad = rutaService.createCiudad(request);
         return new ResponseEntity<>(ciudad, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/ciudades/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
     public ResponseEntity<Void> deleteCiudad(@PathVariable Integer id) {
         rutaService.deleteCiudad(id);
         return ResponseEntity.noContent().build();
@@ -49,7 +49,7 @@ public class RutaController {
     }
 
     @PostMapping("/generales")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
     public ResponseEntity<RutaGeneralDTO> createRutaGeneral(@Valid @RequestBody RutaGeneralCreateRequest request) {
         RutaGeneralDTO ruta = rutaService.createRutaGeneral(request);
         return new ResponseEntity<>(ruta, HttpStatus.CREATED);

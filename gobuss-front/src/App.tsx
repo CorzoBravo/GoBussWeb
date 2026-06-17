@@ -8,6 +8,7 @@ import { Toaster } from 'sonner';
 import { CooperativasList } from './pages/cooperativas/CooperativasList';
 import { ConductoresList } from './pages/conductores/ConductoresList';
 import { AyudantesList } from './pages/ayudantes/AyudantesList';
+import { UnidadesList } from './pages/unidades/UnidadesList';
 import { RutasList } from './pages/rutas/RutasList';
 import { HorariosList } from './pages/horarios/HorariosList';
 import { ReportesList } from './pages/reportes/ReportesList';
@@ -51,11 +52,12 @@ function App() {
               </Route>
 
               <Route element={<RoleRoute roles={['ADMIN', 'COOPERATIVA']} />}>
-                <Route path="conductores" element={<ConductoresList />} />
-                <Route path="ayudantes" element={<AyudantesList />} />
                 <Route path="rutas" element={<RutasList />} />
                 <Route path="horarios" element={<HorariosList />} />
+                <Route path="conductores" element={<ConductoresList />} />
+                <Route path="ayudantes" element={<AyudantesList />} />
                 <Route path="reportes" element={<ReportesList />} />
+                <Route path="unidades" element={<UnidadesList />} />
               </Route>
             </Route>
           </Route>
