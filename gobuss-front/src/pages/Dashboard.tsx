@@ -40,7 +40,12 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (user?.role === 'CONDUCTOR') {
-      navigate('/conductor-dashboard');
+      navigate('/dashboard/conductor-dashboard');
+      return;
+    }
+
+    if (user?.role === 'USUARIO') {
+      navigate('/dashboard/boletos');
       return;
     }
 

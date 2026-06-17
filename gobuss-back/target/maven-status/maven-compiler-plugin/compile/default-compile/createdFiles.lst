@@ -102,6 +102,7 @@ com\proyectogobuss\dto\asiento\AsientoDTO.class
 com\proyectogobuss\dto\unidad\UnidadDTO.class
 com\proyectogobuss\dto\horario\PasajeroDTO$PasajeroDTOBuilder.class
 com\proyectogobuss\dto\auth\LoginRequest.class
+com\proyectogobuss\config\AdminSeeder.class
 com\proyectogobuss\repositories\RefreshTokenRepository.class
 com\proyectogobuss\repositories\RutaGeneralRepository.class
 com\proyectogobuss\repositories\AyudanteRepository.class
@@ -127,6 +128,7 @@ com\proyectogobuss\dto\auth\LoginResponse$LoginResponseBuilder.class
 com\proyectogobuss\dto\ayudante\AyudanteCreateRequest.class
 com\proyectogobuss\repositories\BoletoRepository.class
 com\proyectogobuss\config\SecurityConfig.class
+GenHash.class
 com\proyectogobuss\controllers\HorarioController.class
 com\proyectogobuss\dto\ReporteOcupacionHorarioDTO.class
 com\proyectogobuss\security\JwtAuthenticationEntryPoint.class

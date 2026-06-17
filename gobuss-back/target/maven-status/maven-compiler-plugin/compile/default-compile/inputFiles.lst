@@ -1,4 +1,5 @@
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Application.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\AdminSeeder.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\JwtConfig.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\OpenApiConfig.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\config\SecurityConfig.java
@@ -103,6 +104,7 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\ReservaTempo
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\RutaService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\StorageService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\UnidadService.java
+C:\gobuss-web\gobuss-back\src\main\java\GenHash.java
 C:\gobuss-web\gobuss-back\src\main\java\Utils\FileUtils.java
 C:\gobuss-web\gobuss-back\src\main\java\Utils\PasswordUtils.java
 C:\gobuss-web\gobuss-back\src\main\java\Utils\PDFUtils.java
