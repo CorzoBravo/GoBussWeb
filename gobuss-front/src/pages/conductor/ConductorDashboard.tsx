@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
-import { Bus, MapPin, Users, CalendarDays, Clock, Route } from 'lucide-react';
+import { Bus, Users, CalendarDays, Clock, Route } from 'lucide-react';
 import api from '../../services/api';
 import { toast } from 'sonner';
 import { PasajerosList } from './PasajerosList';
@@ -123,7 +123,7 @@ export const ConductorDashboard = () => {
 
                   <div className="mt-6 pt-4 border-t border-surface-100 flex justify-end">
                     <Button 
-                      variant="outline"
+                      variant="secondary"
                       className="w-full sm:w-auto"
                       onClick={() => setSelectedHorario(horario.idHorario)}
                     >

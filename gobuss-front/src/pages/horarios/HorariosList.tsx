@@ -14,6 +14,7 @@ interface Horario {
   activo: boolean;
   asientosDisponibles: number;
   asientosReservados: number;
+  conductorNombre?: string;
 }
 
 export const HorariosList = () => {
