@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Button } from './Button';
-import React from 'react';
 
 describe('Button Component', () => {
   it('renders children correctly', () => {
@@ -9,3 +8,4 @@ describe('Button Component', () => {
     expect(screen.getByText('Click me')).toBeDefined();
   });
 });
+
