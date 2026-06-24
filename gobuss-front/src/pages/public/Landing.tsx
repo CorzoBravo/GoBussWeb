@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Bus, Map, Clock, ShieldCheck, Search, MapPin, CalendarDays } from 'lucide-react';
+import { Bus, Map, Clock, ShieldCheck } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 
 export const Landing = () => {
@@ -63,40 +63,11 @@ export const Landing = () => {
             </div>
           </div>
 
-          {/* Floating Search Box */}
-          <div className="absolute -bottom-16 left-0 right-0 z-20 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-5xl mx-auto bg-white rounded-3xl shadow-2xl p-4 md:p-6 border border-surface-100 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-              <div className="flex flex-col md:flex-row gap-4 items-end">
-                <div className="flex-1 w-full">
-                  <label className="block text-sm font-bold text-surface-700 mb-2 font-display">Origen</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
-                    <input type="text" placeholder="¿De dónde sales?" className="w-full bg-surface-50 border border-surface-200 rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none" />
-                  </div>
-                </div>
-                
-                <div className="flex-1 w-full">
-                  <label className="block text-sm font-bold text-surface-700 mb-2 font-display">Destino</label>
-                  <div className="relative">
-                    <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-brand-500" />
-                    <input type="text" placeholder="¿A dónde vas?" className="w-full bg-surface-50 border border-surface-200 rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none" />
-                  </div>
-                </div>
-
-                <div className="flex-1 w-full">
-                  <label className="block text-sm font-bold text-surface-700 mb-2 font-display">Fecha de viaje</label>
-                  <div className="relative">
-                    <CalendarDays className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
-                    <input type="date" className="w-full bg-surface-50 border border-surface-200 rounded-xl py-3 pl-12 pr-4 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none text-surface-700" />
-                  </div>
-                </div>
-
-                <Button variant="primary" size="lg" className="w-full md:w-auto px-8 py-3.5 h-[50px]">
-                  <Search className="w-5 h-5 mr-2" />
-                  Buscar boletos
-                </Button>
-              </div>
-            </div>
+          <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20 mt-12 animate-fade-in mx-auto w-full max-w-md text-center">
+            <h3 className="text-xl font-bold text-white mb-4">¿Listo para viajar?</h3>
+            <Button variant="primary" size="lg" className="w-full px-8 py-3.5 h-[50px]" onClick={() => window.location.href = '/login'}>
+              Ingresa a tu cuenta para buscar boletos
+            </Button>
           </div>
         </div>
 

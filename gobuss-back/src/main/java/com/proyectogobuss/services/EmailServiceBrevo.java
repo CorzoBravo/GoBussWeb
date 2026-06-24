@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Base64;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class EmailServiceBrevo {
 
@@ -55,7 +57,7 @@ public class EmailServiceBrevo {
             email.add("sender", sender);
             email.add("to", toArray);
             email.addProperty("subject", "Tu Boleto GoBuss - " + boleto.getIdBoleto());
-            email.addProperty("htmlContent", "<html><body><h3>Gracias por tu compra</h3><p>Adjuntamos tu boleto.</p></body></html>");
+            email.addProperty("htmlContent", buildHtmlContent(boleto));
             email.add("attachment", attachments);
 
             RequestBody body = RequestBody.create(
@@ -72,15 +74,21 @@ public class EmailServiceBrevo {
 
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
-                    System.err.println("Error al enviar email. Código: " + response.code());
-                    System.err.println("Respuesta: " + response.body().string());
+                    log.error("Error al enviar email. Código: {}", response.code());
+                    log.error("Respuesta: {}", response.body() != null ? response.body().string() : "null");
                 } else {
-                    System.out.println("Email enviado exitosamente a " + boleto.getUsuario().getCorreo());
+                    log.info("Email enviado exitosamente a {}", boleto.getUsuario().getCorreo());
                 }
             }
-
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error procesando envio de email: ", e);
         }
+    }
+
+    private String buildHtmlContent(Boleto boleto) {
+        return "<html><body><h3>Gracias por tu compra, " + boleto.getUsuario().getNombres() + "</h3>" +
+               "<p>Adjuntamos tu boleto (ID: " + boleto.getIdBoleto() + ").</p>" +
+               "<p>Monto: $" + boleto.getMonto() + "</p>" +
+               "</body></html>";
     }
 }

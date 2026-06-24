@@ -1,4 +1,4 @@
-package Utils;
+package com.proyectogobuss.utils;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -27,3 +27,4 @@ public final class QRUtils {
         MatrixToImageWriter.writeToPath(matrix, "PNG", path);
     }
 }
+

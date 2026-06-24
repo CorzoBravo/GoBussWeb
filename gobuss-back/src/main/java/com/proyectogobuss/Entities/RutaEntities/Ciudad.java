@@ -1,8 +1,14 @@
 package com.proyectogobuss.Entities.RutaEntities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "ciudad")
 public class Ciudad {
 
@@ -13,26 +19,9 @@ public class Ciudad {
     @Column(nullable = false, length = 60)
     private String nombre;
 
-    public Ciudad() {
-    }
+
 
     public Ciudad(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
@@ -44,3 +33,4 @@ public class Ciudad {
     @Column(nullable = false)
     private boolean activo = true;
 }
+

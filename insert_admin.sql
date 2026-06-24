@@ -1,0 +1,1 @@
+INSERT INTO usuarios (cedula, contrasena, correo, nombres, role) VALUES ('0000000000', '\\\.UnmPN8ec.N.H/N3b52N.2j744vR/e8T0O9dFqX10/v0NfM5KjJm', 'admin@gobuss.com', 'Administrador General', 'ADMIN') ON CONFLICT (cedula) DO NOTHING;

@@ -1,8 +1,14 @@
 package com.proyectogobuss.Entities.RutaEntities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "ruta_general")
 public class RutaGeneral {
 
@@ -19,38 +25,14 @@ public class RutaGeneral {
     @JoinColumn(name = "idDestino", nullable = false)
     private Ciudad destino;
 
-    public RutaGeneral() {
-    }
+
 
     public RutaGeneral(Ciudad origen, Ciudad destino) {
         this.origen = origen;
         this.destino = destino;
     }
 
-    public Integer getIdRutaGeneral() {
-        return idRutaGeneral;
-    }
-
-    public void setIdRutaGeneral(Integer idRutaGeneral) {
-        this.idRutaGeneral = idRutaGeneral;
-    }
-
-    public Ciudad getOrigen() {
-        return origen;
-    }
-
-    public void setOrigen(Ciudad origen) {
-        this.origen = origen;
-    }
-
-    public Ciudad getDestino() {
-        return destino;
-    }
-
-    public void setDestino(Ciudad destino) {
-        this.destino = destino;
-    }
-
     @Column(nullable = false)
     private boolean activo = true;
 }
+

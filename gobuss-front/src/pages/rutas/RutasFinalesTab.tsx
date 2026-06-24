@@ -41,7 +41,7 @@ export const RutasFinalesTab = () => {
     if (user?.role === 'ADMIN') {
       fetchCooperativas();
     } else if (user?.role === 'COOPERATIVA') {
-      setSelectedRuc(user.id);
+      setSelectedRuc(user.ruc || user.id);
     }
     fetchRutasGenerales();
   }, [user]);

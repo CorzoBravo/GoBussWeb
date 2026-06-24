@@ -1,8 +1,14 @@
 package com.proyectogobuss.Entities.CoopEntities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "ayudante")
 public class Ayudante {
 
@@ -20,38 +26,7 @@ public class Ayudante {
     @JoinColumn(name = "conductor_asignado", referencedColumnName = "cedula", nullable = true)
     private Conductor conductorAsignado;
 
-    public String getCedula() {
-        return cedula;
-    }
-
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
-    }
-
-    public String getNombres() {
-        return nombres;
-    }
-
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
-
-    public String getCelular() {
-        return celular;
-    }
-
-    public void setCelular(String celular) {
-        this.celular = celular;
-    }
-
-    public Conductor getConductorAsignado() {
-        return conductorAsignado;
-    }
-
-    public void setConductorAsignado(Conductor conductorAsignado) {
-        this.conductorAsignado = conductorAsignado;
-    }
-
     @Column(nullable = false)
     private boolean activo = true;
 }
+

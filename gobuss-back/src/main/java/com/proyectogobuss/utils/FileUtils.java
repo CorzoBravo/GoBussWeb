@@ -1,4 +1,4 @@
-package Utils;
+package com.proyectogobuss.utils;
 
 import java.io.File;
 
@@ -20,3 +20,4 @@ public final class FileUtils {
         return new File(dir, filename);
     }
 }
+

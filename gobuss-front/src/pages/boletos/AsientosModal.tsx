@@ -39,6 +39,19 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
     }
   }, [isOpen, horarioId]);
 
+  useEffect(() => {
+    if (!isOpen || step !== 'SELECCION') return;
+    const interval = setInterval(() => {
+      setAsientos(prev => prev.map(a => {
+        if (a.tiempoRestanteSegundos && a.tiempoRestanteSegundos > 0) {
+          return { ...a, tiempoRestanteSegundos: a.tiempoRestanteSegundos - 1 };
+        }
+        return a;
+      }));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [isOpen, step]);
+
   const fetchAsientos = async () => {
     try {
       setLoading(true);

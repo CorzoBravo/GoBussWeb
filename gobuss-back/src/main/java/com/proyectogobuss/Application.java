@@ -8,10 +8,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
 @EnableAsync
 @EnableScheduling
+@EnableCaching
 public class Application {
 
     public static void main(String[] args) {

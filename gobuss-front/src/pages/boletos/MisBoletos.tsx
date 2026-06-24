@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
-import { Ticket, Calendar, MapPin, Search } from 'lucide-react';
+import { Ticket, Calendar, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Boleto {
@@ -73,14 +73,6 @@ export const MisBoletos = () => {
             Mis Boletos
           </h1>
           <p className="text-surface-500 mt-1">Historial de todas tus compras y viajes</p>
-        </div>
-        <div className="relative w-full sm:w-72">
-          <input
-            type="text"
-            placeholder="Buscar por ruta o fecha..."
-            className="w-full pl-10 pr-4 py-2.5 bg-surface-50 border border-surface-200 rounded-xl focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all text-sm"
-          />
-          <Search className="w-4 h-4 text-surface-400 absolute left-3 top-3" />
         </div>
       </div>
 

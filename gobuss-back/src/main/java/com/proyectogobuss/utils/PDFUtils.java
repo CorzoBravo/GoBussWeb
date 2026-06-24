@@ -1,4 +1,4 @@
-package Utils;
+package com.proyectogobuss.utils;
 
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfWriter;
@@ -86,3 +86,4 @@ public final class PDFUtils {
         document.close();
     }
 }
+

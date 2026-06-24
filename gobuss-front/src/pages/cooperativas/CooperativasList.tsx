@@ -23,6 +23,7 @@ export const CooperativasList = () => {
   const [cooperativas, setCooperativas] = useState<Cooperativa[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCooperativa, setEditingCooperativa] = useState<Cooperativa | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -32,8 +33,8 @@ export const CooperativasList = () => {
   const fetchCooperativas = async () => {
     try {
       setLoading(true);
-      const url = search 
-        ? `/cooperativas/search?q=${search}&page=${page}&size=10`
+      const url = debouncedSearch 
+        ? `/cooperativas/search?q=${debouncedSearch}&page=${page}&size=10`
         : `/cooperativas?page=${page}&size=10`;
       const response = await api.get(url);
       setCooperativas(response.data.content);
@@ -46,8 +47,16 @@ export const CooperativasList = () => {
   };
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+      if (search !== debouncedSearch) setPage(0);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
     fetchCooperativas();
-  }, [page, search]);
+  }, [page, debouncedSearch]);
 
   const handleOpenCreate = () => {
     setEditingCooperativa(null);
@@ -59,7 +68,7 @@ export const CooperativasList = () => {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Partial<Cooperativa>) => {
     try {
       setSubmitting(true);
       if (editingCooperativa) {
@@ -289,3 +298,4 @@ export const CooperativasList = () => {
     </div>
   );
 };
+

@@ -50,7 +50,6 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\ruta\RutaGeneralD
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\unidad\UnidadCreateRequest.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\unidad\UnidadDTO.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\dto\unidad\UnidadUpdateRequest.java
-C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\EmailService\BrevoConfig.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\AsientoReservado.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\Boleto.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\Entities\CoopEntities\Ayudante.java
@@ -104,8 +103,7 @@ C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\ReservaTempo
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\RutaService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\StorageService.java
 C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\services\UnidadService.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\utils\FileUtils.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\utils\PDFUtils.java
+C:\gobuss-web\gobuss-back\src\main\java\com\proyectogobuss\utils\QRUtils.java
 C:\gobuss-web\gobuss-back\src\main\java\GenHash.java
-C:\gobuss-web\gobuss-back\src\main\java\Utils\FileUtils.java
-C:\gobuss-web\gobuss-back\src\main\java\Utils\PasswordUtils.java
-C:\gobuss-web\gobuss-back\src\main\java\Utils\PDFUtils.java
-C:\gobuss-web\gobuss-back\src\main\java\Utils\QRUtils.java

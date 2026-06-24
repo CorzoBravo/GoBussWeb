@@ -25,6 +25,7 @@ export const Login: React.FC = () => {
       
       login(data.token, data.refresh_token || data.refreshToken, {
         id: data.user_details.id,
+        ruc: data.user_details.id, // Para cooperativas, el ID es el RUC
         nombre: data.user_details.nombre,
         role: data.role,
         userType: data.user_type || data.userType,

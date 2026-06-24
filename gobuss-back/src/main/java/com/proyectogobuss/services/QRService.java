@@ -2,8 +2,8 @@ package com.proyectogobuss.services;
 
 import com.proyectogobuss.Entities.Boleto;
 
-import Utils.FileUtils;
-import Utils.QRUtils;
+import com.proyectogobuss.utils.FileUtils;
+import com.proyectogobuss.utils.QRUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -39,3 +39,4 @@ public class QRService {
         return qrFile;
     }
 }
+

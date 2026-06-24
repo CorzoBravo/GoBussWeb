@@ -40,7 +40,7 @@ export const HorariosList = () => {
     if (user?.role === 'ADMIN') {
       fetchCooperativas();
     } else if (user?.role === 'COOPERATIVA') {
-      setSelectedRuc(user.id);
+      setSelectedRuc(user.ruc || user.id);
     }
   }, [user]);
 
@@ -183,7 +183,10 @@ export const HorariosList = () => {
           <div className="w-full md:w-64">
             <select
               value={selectedRuc}
-              onChange={(e) => setSelectedRuc(e.target.value)}
+              onChange={(e) => {
+                setSelectedRuc(e.target.value);
+                setPage(0);
+              }}
               className="w-full px-3 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 outline-none"
             >
               <option value="" disabled>Seleccionar Cooperativa</option>
@@ -324,3 +327,5 @@ export const HorariosList = () => {
     </div>
   );
 };
+
+

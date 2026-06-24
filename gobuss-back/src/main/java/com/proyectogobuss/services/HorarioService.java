@@ -123,13 +123,15 @@ public class HorarioService {
     }
 
     private void generateAsientos(Horario horario, Integer capacidad) {
+        java.util.List<AsientoReservado> asientos = new java.util.ArrayList<>();
         for (int i = 1; i <= capacidad; i++) {
             AsientoReservado asiento = new AsientoReservado();
             asiento.setHorario(horario);
             asiento.setNumeroAsiento(i);
             asiento.setEstado(AsientoReservado.EstadoAsiento.DISPONIBLE);
-            asientoRepository.save(asiento);
+            asientos.add(asiento);
         }
+        asientoRepository.saveAll(asientos);
         log.info("Generated {} asientos for horario {}", capacidad, horario.getIdHorario());
     }
 
@@ -186,7 +188,7 @@ public class HorarioService {
     @Transactional(readOnly = true)
     public List<HorarioDTO> searchAvailable(LocalDate fecha, Integer origenId, Integer destinoId) {
         // Buscar todas las rutas entre origen y destino
-        List<RutaFinal> rutas = rutaFinalRepository.findByRutaGeneralIdRutaGeneral(0)
+        List<RutaFinal> rutas = rutaFinalRepository.findAll()
                 .stream()
                 .filter(r -> r.getRutaGeneral().getOrigen().getId().equals(origenId)
                         && r.getRutaGeneral().getDestino().getId().equals(destinoId))

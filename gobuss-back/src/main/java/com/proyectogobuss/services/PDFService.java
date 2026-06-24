@@ -2,8 +2,8 @@ package com.proyectogobuss.services;
 
 import com.proyectogobuss.Entities.Boleto;
 
-import Utils.FileUtils;
-import Utils.PDFUtils;
+import com.proyectogobuss.utils.FileUtils;
+import com.proyectogobuss.utils.PDFUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -22,3 +22,4 @@ public class PDFService {
         return pdfFile;
     }
 }
+

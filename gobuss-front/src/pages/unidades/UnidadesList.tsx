@@ -40,7 +40,7 @@ export const UnidadesList = () => {
     if (user?.role === 'ADMIN') {
       fetchCooperativas();
     } else if (user?.role === 'COOPERATIVA') {
-      setSelectedRuc(user.id);
+      setSelectedRuc(user.ruc || user.id);
     }
   }, [user]);
 
@@ -90,7 +90,7 @@ export const UnidadesList = () => {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Partial<Unidad>) => {
     try {
       setSubmitting(true);
       
@@ -267,3 +267,4 @@ export const UnidadesList = () => {
     </div>
   );
 };
+

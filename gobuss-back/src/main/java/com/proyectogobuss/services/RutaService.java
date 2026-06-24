@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class RutaService {
 
     // CIUDADES
     @Transactional(readOnly = true)
+    @Cacheable("ciudades")
     public List<CiudadDTO> getAllCiudades() {
         return ciudadRepository.findAll()
                 .stream()
@@ -59,6 +61,7 @@ public class RutaService {
 
     // RUTAS GENERALES
     @Transactional(readOnly = true)
+    @Cacheable("rutas_generales")
     public List<RutaGeneralDTO> getAllRutasGenerales() {
         return rutaGeneralRepository.findAll()
                 .stream()
@@ -163,3 +166,4 @@ public class RutaService {
                 .build();
     }
 }
+

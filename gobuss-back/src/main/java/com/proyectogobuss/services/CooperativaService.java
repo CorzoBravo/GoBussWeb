@@ -78,7 +78,11 @@ public class CooperativaService {
     }
 
     public CooperativaDTO update(String ruc, CooperativaUpdateRequest request, String authenticatedUsername) {
-        if (!authenticatedUsername.equals("ADMIN") && !authenticatedUsername.equals(ruc)) {
+        boolean isAdmin = org.springframework.security.core.context.SecurityContextHolder.getContext()
+                .getAuthentication().getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin && !authenticatedUsername.equals(ruc)) {
             throw new com.proyectogobuss.exception.UnauthorizedException("No puedes editar otra cooperativa");
         }
 

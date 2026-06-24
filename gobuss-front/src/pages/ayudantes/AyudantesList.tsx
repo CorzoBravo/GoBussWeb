@@ -45,7 +45,7 @@ export const AyudantesList = () => {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Partial<Ayudante>) => {
     try {
       setSubmitting(true);
       
@@ -208,3 +208,4 @@ export const AyudantesList = () => {
     </div>
   );
 };
+

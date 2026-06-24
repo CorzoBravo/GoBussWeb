@@ -40,7 +40,7 @@ export const ConductoresList = () => {
     if (user?.role === 'ADMIN') {
       fetchCooperativas();
     } else if (user?.role === 'COOPERATIVA') {
-      setSelectedRuc(user.id);
+      setSelectedRuc(user.ruc || user.id);
     }
   }, [user]);
 
@@ -90,7 +90,7 @@ export const ConductoresList = () => {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: Partial<Conductor>) => {
     try {
       setSubmitting(true);
       
@@ -286,3 +286,4 @@ export const ConductoresList = () => {
     </div>
   );
 };
+
