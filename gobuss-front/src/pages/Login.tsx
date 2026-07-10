@@ -59,7 +59,9 @@ export const Login: React.FC = () => {
               Ingreso al Sistema
             </h2>
             <p className="mt-2 text-sm text-surface-500 font-medium">
-              Plataforma Administrativa <span className="font-bold text-brand-600">GoBuss</span>
+              Plataforma Administrativa <Link to="/auth/register" className="font-bold text-brand-600 hover:text-brand-700 transition-colors">
+              Registrate
+            </Link>
             </p>
           </div>
           <form className="mt-10 space-y-6" onSubmit={handleLogin}>

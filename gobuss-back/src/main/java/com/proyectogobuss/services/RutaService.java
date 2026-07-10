@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CacheEvict;
 
 import java.util.List;
 
@@ -39,6 +40,7 @@ public class RutaService {
                 .toList();
     }
 
+    @CacheEvict(value = "ciudades", allEntries = true)
     public CiudadDTO createCiudad(CiudadCreateRequest request) {
         if (ciudadRepository.existsByNombreIgnoreCase(request.getNombre())) {
             throw new ResourceNotFoundException("Ciudad already exists: " + request.getNombre());
@@ -52,6 +54,7 @@ public class RutaService {
         return convertCiudadToDTO(ciudad);
     }
 
+    @CacheEvict(value = "ciudades", allEntries = true)
     public void deleteCiudad(Integer id) {
         Ciudad ciudad = ciudadRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ciudad not found: " + id));
@@ -69,6 +72,7 @@ public class RutaService {
                 .toList();
     }
 
+    @CacheEvict(value = "rutas_generales", allEntries = true)
     public RutaGeneralDTO createRutaGeneral(RutaGeneralCreateRequest request) {
         Ciudad origen = ciudadRepository.findById(request.getOrigenId())
                 .orElseThrow(() -> new ResourceNotFoundException("Origen ciudad not found"));

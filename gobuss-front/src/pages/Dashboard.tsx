@@ -48,7 +48,7 @@ export const Dashboard = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className={`grid grid-cols-1 md:grid-cols-2 ${user?.role === 'ADMIN' ? 'lg:grid-cols-4' : ''} gap-6`}>
         <Card className="border-l-4 border-l-brand-500 hover:-translate-y-1 transition-transform cursor-default">
           <div className="flex justify-between items-start">
             <div>
@@ -81,35 +81,39 @@ export const Dashboard = () => {
           </div>
         </Card>
 
-        <Card className="border-l-4 border-l-info-500 hover:-translate-y-1 transition-transform cursor-default">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Cooperativas</p>
-              <h3 className="text-2xl font-black text-surface-800 mt-2">{stats.totalCooperativas}</h3>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-info-50 text-info-600 flex items-center justify-center">
-              <MapPin className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-4 flex items-center text-sm text-surface-500 font-medium">
-            Registradas
-          </div>
-        </Card>
+        {user?.role === 'ADMIN' && (
+          <>
+            <Card className="border-l-4 border-l-info-500 hover:-translate-y-1 transition-transform cursor-default">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Cooperativas</p>
+                  <h3 className="text-2xl font-black text-surface-800 mt-2">{stats.totalCooperativas}</h3>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-info-50 text-info-600 flex items-center justify-center">
+                  <MapPin className="w-5 h-5" />
+                </div>
+              </div>
+              <div className="mt-4 flex items-center text-sm text-surface-500 font-medium">
+                Registradas
+              </div>
+            </Card>
 
-        <Card className="border-l-4 border-l-success-500 hover:-translate-y-1 transition-transform cursor-default">
-          <div className="flex justify-between items-start">
-            <div>
-              <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Usuarios</p>
-              <h3 className="text-2xl font-black text-surface-800 mt-2">{stats.totalUsuarios}</h3>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-success-50 text-success-600 flex items-center justify-center">
-              <Bus className="w-5 h-5" />
-            </div>
-          </div>
-          <div className="mt-4 flex items-center text-sm text-success-600 font-bold">
-            98% <span className="text-surface-400 font-medium ml-2">disponibilidad</span>
-          </div>
-        </Card>
+            <Card className="border-l-4 border-l-success-500 hover:-translate-y-1 transition-transform cursor-default">
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-sm font-bold text-surface-500 uppercase tracking-wider">Usuarios</p>
+                  <h3 className="text-2xl font-black text-surface-800 mt-2">{stats.totalUsuarios}</h3>
+                </div>
+                <div className="w-10 h-10 rounded-xl bg-success-50 text-success-600 flex items-center justify-center">
+                  <Bus className="w-5 h-5" />
+                </div>
+              </div>
+              <div className="mt-4 flex items-center text-sm text-success-600 font-bold">
+                98% <span className="text-surface-400 font-medium ml-2">disponibilidad</span>
+              </div>
+            </Card>
+          </>
+        )}
       </div>
     </div>
   );

@@ -28,9 +28,15 @@ public interface BoletoRepository extends JpaRepository<Boleto, Integer> {
 
     @Query("SELECT COALESCE(SUM(b.monto), 0) FROM Boleto b")
     Double sumMontoTotal();
+    
+    @Query("SELECT COALESCE(SUM(b.monto), 0) FROM Boleto b WHERE b.horario.rutaFinal.cooperativa.ruc = :ruc")
+    Double sumMontoByCooperativa(@Param("ruc") String ruc);
 
     @Query("SELECT COUNT(DISTINCT b.horario.idHorario) FROM Boleto b")
     long countViajesTotal();
+    
+    @Query("SELECT COUNT(DISTINCT b.horario.idHorario) FROM Boleto b WHERE b.horario.rutaFinal.cooperativa.ruc = :ruc")
+    long countViajesByCooperativa(@Param("ruc") String ruc);
 
     @Query("""
         SELECT new com.proyectogobuss.dto.ReporteVentasRutaDTO(

@@ -16,8 +16,11 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
-    public ResponseEntity<AdminDashboardDTO> getDashboardStats() {
-        AdminDashboardDTO stats = adminService.getDashboardStats();
+    public ResponseEntity<AdminDashboardDTO> getDashboardStats(org.springframework.security.core.Authentication authentication) {
+        boolean isCooperativa = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_COOPERATIVA"));
+        String ruc = isCooperativa ? authentication.getName() : null;
+        AdminDashboardDTO stats = adminService.getDashboardStats(ruc);
         return ResponseEntity.ok(stats);
     }
 }
