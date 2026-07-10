@@ -37,7 +37,7 @@ public class BoletoService {
 
     private BoletoService self;
 
-    @org.springframework.context.annotation.Autowired
+    @org.springframework.beans.factory.annotation.Autowired
     public void setSelf(@org.springframework.context.annotation.Lazy BoletoService self) {
         this.self = self;
     }
