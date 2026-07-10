@@ -346,7 +346,7 @@ export const AsientosModal = ({ isOpen, onClose, horarioId }: Props) => {
                       disabled={a.estado === 'OCUPADO' || (a.estado === 'RESERVADO' && !isSelected)}
                       onClick={() => handleToggleSeat(a.idReserva, a.estado)}
                       className={`
-                        w-12 h-14 rounded-t-2xl rounded-b-lg flex items-center justify-center text-sm font-bold transition-all duration-300
+                        relative w-12 h-14 rounded-t-2xl rounded-b-lg flex items-center justify-center text-sm font-bold transition-all duration-300
                         ${(!isDisponible && !isSelected)
                           ? 'bg-surface-200 text-surface-400 cursor-not-allowed opacity-70' 
                           : isSelected 

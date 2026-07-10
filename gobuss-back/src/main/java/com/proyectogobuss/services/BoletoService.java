@@ -35,6 +35,13 @@ public class BoletoService {
     private final AsientoReservadoRepository asientoRepository;
     private final com.proyectogobuss.repositories.ReservaTemporalRepository reservaRepository;
 
+    private BoletoService self;
+
+    @org.springframework.context.annotation.Autowired
+    public void setSelf(@org.springframework.context.annotation.Lazy BoletoService self) {
+        this.self = self;
+    }
+
     @Transactional
     public BoletoDTO crearBoleto(BoletoCreateRequest request, String usuarioCedula) {
         Horario horario = horarioRepository.findById(request.getHorarioId())
@@ -92,7 +99,7 @@ public class BoletoService {
         }
         
         // Trigger async processing
-        procesarYEnviarBoletoAsync(savedBoleto.getIdBoleto());
+        self.procesarYEnviarBoletoAsync(savedBoleto.getIdBoleto());
 
         return BoletoDTO.builder()
                 .idBoleto(savedBoleto.getIdBoleto())

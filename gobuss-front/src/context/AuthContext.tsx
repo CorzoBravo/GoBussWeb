@@ -27,8 +27,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (token && storedUser) {
       try {
-        // Decode token to check expiration without external library (payload is base64)
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        // Decode token to check expiration without external library (payload is base64url / UTF-8)
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        const payload = JSON.parse(jsonPayload);
         const isExpired = payload.exp * 1000 < Date.now();
 
         if (isExpired) {
