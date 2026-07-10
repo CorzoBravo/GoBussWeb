@@ -7,6 +7,7 @@ import com.proyectogobuss.dto.ayudante.AyudanteUpdateRequest;
 import com.proyectogobuss.exception.ResourceNotFoundException;
 import com.proyectogobuss.repositories.AyudanteRepository;
 import com.proyectogobuss.repositories.ConductorRepository;
+import com.proyectogobuss.repositories.CooperativaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,32 +22,40 @@ public class AyudanteService {
 
     private final AyudanteRepository ayudanteRepository;
     private final ConductorRepository conductorRepository;
+    private final CooperativaRepository cooperativaRepository;
 
     @Transactional(readOnly = true)
-    public List<AyudanteDTO> getAll() {
-        return ayudanteRepository.findAll()
+    public List<AyudanteDTO> getByCooperativa(String ruc) {
+        return ayudanteRepository.findByCooperativaRuc(ruc)
                 .stream()
                 .map(this::convertToDTO)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public AyudanteDTO getById(String cedula) {
+    public AyudanteDTO getById(String ruc, String cedula) {
         Ayudante ayudante = ayudanteRepository.findById(cedula)
                 .orElseThrow(() -> new ResourceNotFoundException("Ayudante not found"));
+        if (!ayudante.getCooperativa().getRuc().equals(ruc)) {
+            throw new ResourceNotFoundException("Ayudante does not belong to this cooperativa");
+        }
         return convertToDTO(ayudante);
     }
 
     @Transactional
-    public AyudanteDTO create(AyudanteCreateRequest request) {
+    public AyudanteDTO create(String ruc, AyudanteCreateRequest request) {
         if (ayudanteRepository.existsById(request.getCedula())) {
             throw new IllegalArgumentException("Ayudante already exists");
         }
+
+        com.proyectogobuss.Entities.UsersEntities.Cooperativa coop = cooperativaRepository.findByRuc(ruc)
+                .orElseThrow(() -> new ResourceNotFoundException("Cooperativa not found"));
 
         Ayudante ayudante = new Ayudante();
         ayudante.setCedula(request.getCedula());
         ayudante.setNombres(request.getNombres());
         ayudante.setCelular(request.getCelular());
+        ayudante.setCooperativa(coop);
 
         if (request.getConductorAsignadoCedula() != null) {
             ayudante.setConductorAsignado(conductorRepository.findById(request.getConductorAsignadoCedula()).orElse(null));
@@ -56,9 +65,12 @@ public class AyudanteService {
     }
 
     @Transactional
-    public AyudanteDTO update(String cedula, AyudanteUpdateRequest request) {
+    public AyudanteDTO update(String ruc, String cedula, AyudanteUpdateRequest request) {
         Ayudante ayudante = ayudanteRepository.findById(cedula)
                 .orElseThrow(() -> new ResourceNotFoundException("Ayudante not found"));
+        if (!ayudante.getCooperativa().getRuc().equals(ruc)) {
+            throw new ResourceNotFoundException("Ayudante does not belong to this cooperativa");
+        }
 
         if (request.getNombres() != null) ayudante.setNombres(request.getNombres());
         if (request.getCelular() != null) ayudante.setCelular(request.getCelular());
@@ -71,9 +83,12 @@ public class AyudanteService {
     }
 
     @Transactional
-    public void delete(String cedula) {
+    public void delete(String ruc, String cedula) {
         Ayudante ayudante = ayudanteRepository.findById(cedula)
                 .orElseThrow(() -> new ResourceNotFoundException("Ayudante not found"));
+        if (!ayudante.getCooperativa().getRuc().equals(ruc)) {
+            throw new ResourceNotFoundException("Ayudante does not belong to this cooperativa");
+        }
         ayudanteRepository.delete(ayudante);
     }
 

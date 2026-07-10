@@ -21,19 +21,19 @@ public class ConductorController {
     private final ConductorService conductorService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA') and @coopGuard.canRead(authentication, #ruc)")
     public ResponseEntity<List<ConductorDTO>> getByCooperativa(@PathVariable String ruc) {
         return ResponseEntity.ok(conductorService.getByCooperativa(ruc));
     }
 
     @GetMapping("/{cedula}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA') and @coopGuard.canRead(authentication, #ruc)")
     public ResponseEntity<ConductorDTO> getById(@PathVariable String ruc, @PathVariable String cedula) {
         return ResponseEntity.ok(conductorService.getById(ruc, cedula));
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
+    @PreAuthorize("hasRole('COOPERATIVA') and @coopGuard.canWrite(authentication, #ruc)")
     public ResponseEntity<ConductorDTO> create(
             @PathVariable String ruc,
             @Valid @RequestBody ConductorCreateRequest request) {
@@ -41,7 +41,7 @@ public class ConductorController {
     }
 
     @PutMapping("/{cedula}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
+    @PreAuthorize("hasRole('COOPERATIVA') and @coopGuard.canWrite(authentication, #ruc)")
     public ResponseEntity<ConductorDTO> update(
             @PathVariable String ruc,
             @PathVariable String cedula,
@@ -50,7 +50,7 @@ public class ConductorController {
     }
 
     @DeleteMapping("/{cedula}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
+    @PreAuthorize("hasRole('COOPERATIVA') and @coopGuard.canWrite(authentication, #ruc)")
     public ResponseEntity<Void> delete(@PathVariable String ruc, @PathVariable String cedula) {
         conductorService.delete(ruc, cedula);
         return ResponseEntity.noContent().build();

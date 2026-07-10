@@ -17,4 +17,8 @@ public interface AsientoReservadoRepository extends JpaRepository<AsientoReserva
     List<AsientoReservado> findByBoletoIdBoleto(Integer idBoleto);
 
     long countByHorarioIdHorarioAndEstado(Integer idHorario, AsientoReservado.EstadoAsiento estado);
+
+    @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
+    @org.springframework.data.jpa.repository.Query("select a from AsientoReservado a where a.idReserva in :ids")
+    List<AsientoReservado> findAllByIdForUpdate(@org.springframework.data.repository.query.Param("ids") List<Integer> ids);
 }

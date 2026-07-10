@@ -29,7 +29,7 @@ public class ReservaTemporalService {
         Usuario usuario = usuarioRepository.findById(usuarioCedula)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        List<AsientoReservado> asientos = asientoRepository.findAllById(asientosIds);
+        List<AsientoReservado> asientos = asientoRepository.findAllByIdForUpdate(asientosIds);
 
         for (AsientoReservado asiento : asientos) {
             if (asiento.getHorario().getIdHorario() != horarioId) {

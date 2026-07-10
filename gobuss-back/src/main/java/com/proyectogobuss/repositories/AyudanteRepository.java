@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface AyudanteRepository extends JpaRepository<Ayudante, String> {
 
     Optional<Ayudante> findByCedula(String cedula);
+
+    java.util.List<Ayudante> findByCooperativaRuc(String ruc);
 }

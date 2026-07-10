@@ -113,7 +113,7 @@ export const HorarioFormModal = ({ isOpen, onClose, onSubmit, rutasFinales, unid
           >
             <option value={0} disabled>Seleccione unidad...</option>
             {unidades.map(u => (
-              <option key={u.id} value={u.id}>Unidad {u.id} - Placa: {u.placa} ({u.capacidad} asientos)</option>
+              <option key={u.idUnidad} value={u.idUnidad}>Unidad {u.numero} - Placa: {u.placa} ({u.capacidad} asientos)</option>
             ))}
           </select>
           {errors.unidadId && <p className="text-red-500 text-xs mt-1">{errors.unidadId.message}</p>}

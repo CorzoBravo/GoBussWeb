@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
-import { Bus, KeyRound, User as UserIcon } from 'lucide-react';
+import { Bus, KeyRound, User as UserIcon, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
@@ -43,6 +43,15 @@ export const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 to-surface-200 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden animate-fade-in">
+      {/* Back to Home Button floating */}
+      <Link 
+        to="/" 
+        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-white/80 hover:bg-white text-surface-600 hover:text-brand-600 font-medium rounded-xl border border-surface-200 shadow-sm backdrop-blur-md transition-all duration-200 group z-20"
+      >
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        Regresar al Inicio
+      </Link>
+
       {/* Decorative blobs */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-200/40 blur-[120px]" />
@@ -62,7 +71,7 @@ export const Login: React.FC = () => {
               Plataforma Administrativa <span className="font-bold text-brand-600">GoBuss</span>
             </p>
           </div>
-          <form className="mt-10 space-y-6" onSubmit={handleLogin}>
+          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
             <div className="space-y-5">
               <div>
                 <label className="block text-sm font-bold text-surface-700 mb-2">Usuario / RUC / Cédula</label>
@@ -93,7 +102,7 @@ export const Login: React.FC = () => {
               </div>
             )}
 
-            <div className="pt-4">
+            <div className="pt-2">
               <Button
                 type="submit"
                 variant="primary"
@@ -104,6 +113,19 @@ export const Login: React.FC = () => {
               </Button>
             </div>
           </form>
+
+          {/* Card Footer Links */}
+          <div className="mt-8 pt-6 border-t border-surface-200/60 text-center">
+            <p className="text-sm text-surface-500 font-medium">
+              ¿No tienes una cuenta?{' '}
+              <Link 
+                to="/register" 
+                className="font-bold text-brand-600 hover:text-brand-700 transition-colors"
+              >
+                Regístrate aquí
+              </Link>
+            </p>
+          </div>
         </Card>
       </div>
     </div>

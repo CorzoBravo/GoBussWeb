@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Bus, ArrowRight, UserPlus, Mail, Lock, CreditCard } from 'lucide-react';
+import { Bus, ArrowRight, UserPlus, Mail, Lock, CreditCard, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
@@ -48,7 +48,15 @@ export const Register = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-surface-50 to-surface-200 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden animate-fade-in">
-      
+      {/* Back to Home Button floating */}
+      <Link 
+        to="/" 
+        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-white/80 hover:bg-white text-surface-600 hover:text-brand-600 font-medium rounded-xl border border-surface-200 shadow-sm backdrop-blur-md transition-all duration-200 group z-20"
+      >
+        <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+        Regresar al Inicio
+      </Link>
+
       {/* Decorative Background */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
         <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-brand-400/20 blur-3xl" />

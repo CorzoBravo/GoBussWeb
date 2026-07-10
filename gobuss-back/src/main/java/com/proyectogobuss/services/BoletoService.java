@@ -50,7 +50,7 @@ public class BoletoService {
         Usuario usuario = usuarioRepository.findById(usuarioCedula)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        List<AsientoReservado> asientos = asientoRepository.findAllById(request.getAsientos());
+        List<AsientoReservado> asientos = asientoRepository.findAllByIdForUpdate(request.getAsientos());
         
         if (asientos.size() != request.getAsientos().size()) {
             throw new IllegalArgumentException("Algunos asientos no son válidos");

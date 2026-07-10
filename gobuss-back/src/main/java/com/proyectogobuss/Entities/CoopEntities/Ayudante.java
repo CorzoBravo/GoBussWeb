@@ -1,5 +1,6 @@
 package com.proyectogobuss.Entities.CoopEntities;
 
+import com.proyectogobuss.Entities.UsersEntities.Cooperativa;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,10 @@ public class Ayudante {
 
     @Column(length = 20)
     private String celular;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cooperativa_ruc", referencedColumnName = "ruc", nullable = false)
+    private Cooperativa cooperativa;
 
     @ManyToOne
     @JoinColumn(name = "conductor_asignado", referencedColumnName = "cedula", nullable = true)

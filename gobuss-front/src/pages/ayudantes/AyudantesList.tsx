@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import api from '../../services/api';
-import { Users, Search, Edit2, Trash2 } from 'lucide-react';
+import { Users, Search, Edit2, Trash2, Bus } from 'lucide-react';
 import { toast } from 'sonner';
 import { AyudanteFormModal } from './AyudanteFormModal';
+import { useAuth } from '../../context/AuthContext';
 
 interface Ayudante {
   cedula: string;
@@ -11,18 +12,56 @@ interface Ayudante {
   conductorAsignadoCedula: string | null;
 }
 
+interface Cooperativa {
+  ruc: string;
+  nombre: string;
+}
+
 export const AyudantesList = () => {
+  const { user } = useAuth();
   const [ayudantes, setAyudantes] = useState<Ayudante[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [cooperativas, setCooperativas] = useState<Cooperativa[]>([]);
+  const [selectedRuc, setSelectedRuc] = useState<string>('');
+  
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAyudante, setEditingAyudante] = useState<Ayudante | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchAyudantes = async () => {
+  useEffect(() => {
+    if (user?.role === 'ADMIN') {
+      fetchCooperativas();
+    } else if (user?.role === 'COOPERATIVA') {
+      setSelectedRuc(user.ruc || user.id);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (selectedRuc) {
+      fetchAyudantes(selectedRuc);
+    } else {
+      setAyudantes([]);
+    }
+  }, [selectedRuc]);
+
+  const fetchCooperativas = async () => {
+    try {
+      const response = await api.get('/cooperativas');
+      const coops = response.data.content || response.data;
+      setCooperativas(coops);
+      if (coops.length > 0) {
+        setSelectedRuc(coops[0].ruc);
+      }
+    } catch (error) {
+      toast.error('Error al cargar cooperativas');
+    }
+  };
+
+  const fetchAyudantes = async (ruc: string) => {
     try {
       setLoading(true);
-      const response = await api.get('/ayudantes');
+      const response = await api.get(`/cooperativas/${ruc}/ayudantes`);
       setAyudantes(response.data);
     } catch (error) {
       toast.error('Error al cargar ayudantes');
@@ -31,11 +70,11 @@ export const AyudantesList = () => {
     }
   };
 
-  useEffect(() => {
-    fetchAyudantes();
-  }, []);
-
   const handleOpenCreate = () => {
+    if (!selectedRuc) {
+      toast.error('Seleccione una cooperativa primero');
+      return;
+    }
     setEditingAyudante(null);
     setIsModalOpen(true);
   };
@@ -55,14 +94,14 @@ export const AyudantesList = () => {
       };
 
       if (editingAyudante) {
-        await api.put(`/ayudantes/${data.cedula}`, payload);
+        await api.put(`/cooperativas/${selectedRuc}/ayudantes/${data.cedula}`, payload);
         toast.success('Ayudante actualizado exitosamente');
       } else {
-        await api.post('/ayudantes', payload);
+        await api.post(`/cooperativas/${selectedRuc}/ayudantes`, payload);
         toast.success('Ayudante registrado exitosamente');
       }
       setIsModalOpen(false);
-      fetchAyudantes();
+      fetchAyudantes(selectedRuc);
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Error al guardar el ayudante');
     } finally {
@@ -73,9 +112,9 @@ export const AyudantesList = () => {
   const handleDelete = async (cedula: string) => {
     if (window.confirm('¿Está seguro de eliminar este ayudante? Esta acción es irreversible.')) {
       try {
-        await api.delete(`/ayudantes/${cedula}`);
+        await api.delete(`/cooperativas/${selectedRuc}/ayudantes/${cedula}`);
         toast.success('Ayudante eliminado');
-        fetchAyudantes();
+        fetchAyudantes(selectedRuc);
       } catch (error: any) {
         toast.error(error.response?.data?.message || 'Error al eliminar ayudante');
       }
@@ -108,12 +147,33 @@ export const AyudantesList = () => {
         </div>
         <button 
           onClick={handleOpenCreate} 
-          className="flex items-center px-4 py-2.5 bg-brand-600 text-white font-medium rounded-xl hover:bg-brand-700 transition-colors shadow-sm active:scale-95"
+          className="flex items-center px-4 py-2.5 bg-brand-600 text-white font-medium rounded-xl hover:bg-brand-700 transition-colors shadow-sm active:scale-95 animate-fade-in"
         >
           <Users className="w-5 h-5 mr-1.5" />
           Registrar Ayudante
         </button>
       </div>
+
+      {/* Selector de Cooperativa para Admin */}
+      {user?.role === 'ADMIN' && (
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+          <label className="block text-sm font-semibold text-slate-700 mb-2 flex items-center">
+            <Bus className="w-4 h-4 mr-1.5 text-brand-500" />
+            Filtrar por Cooperativa
+          </label>
+          <select
+            value={selectedRuc}
+            onChange={(e) => setSelectedRuc(e.target.value)}
+            className="w-full max-w-md px-3.5 py-2.5 bg-slate-50 hover:bg-slate-100/70 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all font-medium text-slate-800"
+          >
+            {cooperativas.map((coop) => (
+              <option key={coop.ruc} value={coop.ruc}>
+                {coop.nombre} (RUC: {coop.ruc})
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Filters and Search */}
       <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center">
@@ -175,7 +235,7 @@ export const AyudantesList = () => {
                     </td>
                     <td className="px-6 py-4">
                       {ayudante.conductorAsignadoCedula ? (
-                        <span className="inline-flex items-center text-xs text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md">
+                        <span className="inline-flex items-center text-xs text-indigo-700 bg-indigo-50 px-2 py-1 rounded-md font-medium">
                           CI: {ayudante.conductorAsignadoCedula}
                         </span>
                       ) : (
@@ -208,4 +268,3 @@ export const AyudantesList = () => {
     </div>
   );
 };
-

@@ -23,7 +23,7 @@ public class HorarioController {
     private final HorarioService horarioService;
 
     @GetMapping("/cooperativa/{ruc}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA') and @coopGuard.canRead(authentication, #ruc)")
     public ResponseEntity<org.springframework.data.domain.Page<HorarioDTO>> getByCooperativa(
             @PathVariable String ruc,
             @org.springframework.data.web.PageableDefault(size = 10, sort = "fecha", direction = org.springframework.data.domain.Sort.Direction.DESC) org.springframework.data.domain.Pageable pageable) {
@@ -43,7 +43,7 @@ public class HorarioController {
     }
 
     @PostMapping("/cooperativa/{ruc}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
+    @PreAuthorize("hasRole('COOPERATIVA') and @coopGuard.canWrite(authentication, #ruc)")
     public ResponseEntity<List<HorarioDTO>> create(
             @PathVariable String ruc,
             @Valid @RequestBody HorarioCreateRequest request) {
@@ -51,7 +51,7 @@ public class HorarioController {
     }
 
     @PatchMapping("/cooperativa/{ruc}/{id}/toggle-status")
-    @PreAuthorize("hasAnyRole('ADMIN', 'COOPERATIVA')")
+    @PreAuthorize("hasRole('COOPERATIVA') and @coopGuard.canWrite(authentication, #ruc)")
     public ResponseEntity<HorarioDTO> toggleStatus(
             @PathVariable String ruc,
             @PathVariable Integer id) {
