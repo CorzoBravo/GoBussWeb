@@ -26,7 +26,7 @@ export const RutasList = () => {
 
       {/* Tabs */}
       <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-1.5 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-1">
-        {(user?.role === 'ADMIN' || user?.role === 'COOPERATIVA') && (
+        {user?.role === 'ADMIN' && (
           <>
             <button
               onClick={() => setActiveTab('ciudades')}
@@ -52,17 +52,19 @@ export const RutasList = () => {
             </button>
           </>
         )}
-        <button
-          onClick={() => setActiveTab('finales')}
-          className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-lg flex items-center justify-center transition-colors ${
-            activeTab === 'finales'
-              ? 'bg-brand-50 text-brand-700'
-              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-          }`}
-        >
-          <RouteIcon className="w-4 h-4 mr-2" />
-          Rutas de Cooperativa
-        </button>
+        {user?.role === 'COOPERATIVA' && (
+          <button
+            onClick={() => setActiveTab('finales')}
+            className={`flex-1 py-2.5 px-4 text-sm font-medium rounded-lg flex items-center justify-center transition-colors ${
+              activeTab === 'finales'
+                ? 'bg-brand-50 text-brand-700'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+            }`}
+          >
+            <RouteIcon className="w-4 h-4 mr-2" />
+            Rutas de Cooperativa
+          </button>
+        )}
       </div>
 
       {/* Content */}

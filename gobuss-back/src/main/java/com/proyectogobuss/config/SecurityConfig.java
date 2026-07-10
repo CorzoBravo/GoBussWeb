@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/boletos/**").hasRole("USUARIO")
                         .requestMatchers(HttpMethod.GET, "/api/ciudades").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/horarios/search").permitAll()
+                        .requestMatchers("/api/admin/dashboard").hasAnyRole("ADMIN", "COOPERATIVA")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/conductores-app/**").hasRole("CONDUCTOR")
                         .requestMatchers("/api/cooperativas/**").hasAnyRole("ADMIN", "COOPERATIVA")

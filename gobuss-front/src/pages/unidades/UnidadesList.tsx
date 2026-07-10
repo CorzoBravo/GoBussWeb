@@ -55,9 +55,10 @@ export const UnidadesList = () => {
   const fetchCooperativas = async () => {
     try {
       const response = await api.get('/cooperativas');
-      setCooperativas(response.data);
-      if (response.data.length > 0) {
-        setSelectedRuc(response.data[0].ruc);
+      const coops = response.data.content || response.data;
+      setCooperativas(coops);
+      if (coops.length > 0) {
+        setSelectedRuc(coops[0].ruc);
       }
     } catch (error) {
       toast.error('Error al cargar cooperativas');

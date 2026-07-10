@@ -23,14 +23,14 @@ export const MainLayout: React.FC = () => {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, roles: ['ADMIN', 'COOPERATIVA'] },
     { name: 'Cooperativas', path: '/dashboard/cooperativas', icon: Bus, roles: ['ADMIN'] },
     { name: 'Rutas', path: '/dashboard/rutas', icon: Map, roles: ['ADMIN', 'COOPERATIVA'] },
-    { name: 'Horarios', path: '/dashboard/horarios', icon: Calendar, roles: ['ADMIN', 'COOPERATIVA'] },
+    { name: 'Horarios', path: '/dashboard/horarios', icon: Calendar, roles: ['COOPERATIVA'] },
     { name: 'Comprar Boletos', path: '/dashboard/boletos', icon: Ticket, roles: ['USUARIO'] },
     { name: 'Mis Boletos', path: '/dashboard/mis-boletos', icon: Ticket, roles: ['USUARIO'] },
     { name: 'Mi Viaje', path: '/dashboard/conductor-dashboard', icon: Bus, roles: ['CONDUCTOR'] },
-    { name: 'Conductores', path: '/dashboard/conductores', icon: Users, roles: ['ADMIN', 'COOPERATIVA'] },
-    { name: 'Ayudantes', path: '/dashboard/ayudantes', icon: Users, roles: ['ADMIN', 'COOPERATIVA'] },
-    { name: 'Unidades', path: '/dashboard/unidades', icon: Bus, roles: ['ADMIN', 'COOPERATIVA'] },
-    { name: 'Reportes', path: '/dashboard/reportes', icon: ClipboardList, roles: ['ADMIN', 'COOPERATIVA'] },
+    { name: 'Conductores', path: '/dashboard/conductores', icon: Users, roles: ['COOPERATIVA'] },
+    { name: 'Ayudantes', path: '/dashboard/ayudantes', icon: Users, roles: ['COOPERATIVA'] },
+    { name: 'Unidades', path: '/dashboard/unidades', icon: Bus, roles: ['COOPERATIVA'] },
+    { name: 'Reportes', path: '/dashboard/reportes', icon: ClipboardList, roles: ['COOPERATIVA'] },
   ];
 
   const filteredNav = navItems.filter(item => user?.role && item.roles.includes(user.role));
